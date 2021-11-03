@@ -51,25 +51,15 @@ const NavBar = () => {
 
       <div className="flex lg:hidden w-2/3 justify-end overflow-y-hidden">
         <button className="z-10">
-          {!mobileNavShown && (
-            <FaBars
-              size={26}
-              onClick={(e) => {
-                e.preventDefault();
-                setMobileNavShown(true);
-              }}
+          <div className="flex flex-col h-12 w-12 border-2 border-black rounded justify-center items-center group">
+            <span className="z-20 h-1 w-6 my-1 rounded-full bg-black transition ease transform duration-300" />
+            <span
+              className={` ${
+                mobileNavShown ? "w-0" : "w-6"
+              }  z-20 h-1 my-1 rounded-full bg-black transition ease transform duration-300`}
             />
-          )}
-          {mobileNavShown && (
-            <FaTimes
-              size={26}
-              className="text-white"
-              onClick={(e) => {
-                e.preventDefault();
-                setMobileNavShown(false);
-              }}
-            />
-          )}
+            <span className="z-20 h-1 w-6 my-1 rounded-full bg-black transition ease transform duration-300" />
+          </div>
         </button>
       </div>
       <div className="absolute top-0 left-0 w-screen h-full overflow-hidden">
