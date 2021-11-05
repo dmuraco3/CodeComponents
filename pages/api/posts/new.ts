@@ -1,7 +1,8 @@
 import { request } from "http";
 import type { NextApiRequest, NextApiResponse } from "next";
+import IsAuthed from "../../../helpers/IsAuthed";
 
-interface Request extends NextApiRequest {
+export interface Request extends NextApiRequest {
   body: {
     title: string;
     code: string;
@@ -9,10 +10,15 @@ interface Request extends NextApiRequest {
   };
 }
 
+// todo (Dylan Muraco) make sure all properties are satisfied
+
 export default async function handler(req: Request, res: NextApiResponse) {
   if (req.method === "POST") {
-    console.log(req.body);
-    res.status(200).json({ response: "success" });
+    if(await IsAuthed(req, res)) {
+      console.log(req.body);
+      res.status(200).json({ response: "success" });
+
+    }
   } else {
     res.status(405).json({ message: "method not allowed" });
   }

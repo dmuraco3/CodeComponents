@@ -42,7 +42,7 @@ const Upload: NextPage = () => {
   const publish = () => {
     fetch(`${process.env.NEXT_PUBLIC_URL}/api/posts/new`, {
       method: "POST",
-      body: JSON.stringify({ ...componentData, extra: "extra" })
+      body: JSON.stringify({ ...componentData})
     })
       .then((res) => res.json())
       .then((json) => console.log(json));
