@@ -1,5 +1,7 @@
 import { NextPage } from "next/types";
 
+import { AuthedPage } from "../../types/AuthedPage";
+
 import Head from "next/head";
 
 import Editor from "@monaco-editor/react";
@@ -7,19 +9,24 @@ import Editor from "@monaco-editor/react";
 import { useRef, useState } from "react";
 import { useRouter } from "next/router";
 import Link from "next/link";
+import { useSession } from "next-auth/client";
 
 interface userComponent {
   title: string;
-  code: string;
+  content: string;
   description: string;
+  published: boolean;
 }
 
-const Upload: NextPage = () => {
+const Upload: AuthedPage = (props) => {
   const [componentData, setComponentData] = useState({
     title: "",
-    code: "",
-    description: ""
+    content: "",
+    description: "",
+    published: true,
   } as userComponent);
+
+  const [session, loading] = useSession()
 
   const editorRef: any = useRef();
 
@@ -32,7 +39,7 @@ const Upload: NextPage = () => {
     if (editorRef.current) {
       setComponentData({
         ...componentData,
-        code: editorRef.current.getValue()
+        content: editorRef.current.getValue()
       });
     }
   }
@@ -99,7 +106,7 @@ const Upload: NextPage = () => {
           height="600px"
           language="javascript"
           theme="vs-dark"
-          value={componentData.code}
+          value={componentData.content}
           onChange={handleEditorChange}
           onMount={handleEditorDidMount}
         />
@@ -111,9 +118,15 @@ const Upload: NextPage = () => {
           className="w-full focus:outline-none mt-8"
           placeholder="Describe what your component does..."
         />
+        <button onClick={(e) => {
+          e.preventDefault()
+          console.log(session)
+        }}>click em</button>
       </main>
     </div>
   );
 };
 
 export default Upload;
+
+Upload.needsAuth = true;

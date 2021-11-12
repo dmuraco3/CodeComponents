@@ -6,7 +6,7 @@ import React, { Dispatch, SetStateAction, useState } from "react";
 
 import { FaBars, FaSearch, FaUserCircle, FaTimes } from "react-icons/fa";
 
-import { signIn, useSession } from "next-auth/client";
+import { signIn, signOut, useSession } from "next-auth/client";
 import { Session } from "next-auth";
 
 interface LinkProps {
@@ -275,9 +275,13 @@ const NavBar = () => {
                   !accountNavShow ? "hidden" : "flex"
                 } absolute bg-white filter drop-shadow-cool transform -translate-x-full translate-y-12 w-40 flex-wrap justify-center px-5`}
               >
-                <h1 className="flex-auto w-full block">weiner</h1>
-                <h1 className="flex-auto w-full block">weiner</h1>
-                <h1 className="flex-auto w-full block">weiner</h1>
+                <button 
+                  onClick={(e) => {
+                    e.preventDefault()
+                    signOut()
+                  }}
+                  className="px-4 py-2 border-4 border-black"
+                >Sign Out</button>
               </div>
             </div>
           )}

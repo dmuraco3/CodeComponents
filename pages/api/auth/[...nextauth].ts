@@ -13,5 +13,11 @@ export default NextAuth({
             clientSecret: process.env.NEXT_AUTH_GOOGLE_CLIENT_SECRET,
         }),
     ],
+    callbacks: {
+        session(session, token) {
+            session.user.id = token.id;
+            return session;
+        }
+    },
     adapter: Adapters.Prisma.Adapter({prisma})
 })

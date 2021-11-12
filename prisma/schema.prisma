@@ -50,6 +50,7 @@ model User {
   image         String?
   createdAt     DateTime  @default(now()) @map(name: "created_at")
   updatedAt     DateTime  @default(now()) @map(name: "updated_at")
+  posts         Post[] 
 
   @@map(name: "users")
 }
@@ -63,4 +64,22 @@ model VerificationRequest {
   updatedAt  DateTime  @default(now()) @map(name: "updated_at")
 
   @@map(name: "verification_requests")
+}
+
+model Post {
+  id          Int      @id @default(autoincrement())
+  title       String
+  content     String
+  description String
+  published   Boolean  @default(false)
+  author      User     @relation(fields: [authorId], references: [id])
+  authorId    Int
+  tags Tag[]
+}
+
+model Tag {
+  id      Int    @id @default(autoincrement())
+  name    String @unique
+  imgSrc  String? 
+  posts   Post[]
 }

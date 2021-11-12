@@ -1,10 +1,10 @@
-import type {Request} from '../pages/api/posts/new'
 import type { NextApiRequest, NextApiResponse } from "next";
 
 import { getToken } from 'next-auth/jwt';
 
-export default async function IsAuthed(req: Request, res: NextApiResponse) {
+export default async function IsAuthed(req: NextApiRequest, res: NextApiResponse) {
     const token = await getToken({ req, secret: process.env.NEXT_AUTH_SECRET });
+    console.log(token)
     if(token) {
       return true;
     } else {
