@@ -56,11 +56,11 @@ const MobileNav = ({
 }: MobileNav) => {
   return (
     <>
-      <div className=" lg:hidden block absolute top-0 left-0 w-screen h-screen overflow-x-hidden">
+      {/* <div className={` lg:hidden inline-block absolute top-0 left-0 w-screen h-screen overflow-x-hidden`}> */}
         <div
           className={`${
-            mobileNavShown ? "left-0" : "left-full"
-          } z-10 transition-all duration-500 ease-in-out absolute filter drop-shadow-cool top-0 w-screen h-full bg-white  `}
+            mobileNavShown ? "-translate-x-0" : "-translate-x-full"
+          } z-10 transition-transform transform duration-500 ease-in-out fixed filter drop-shadow-cool left-0 top-0 w-screen h-screen bg-white overflow-hidden  `}
         >
           <div className="flex justify-center h-16 items-center filter bg-white drop-shadow-cool">
             <img src="/_logo.svg" className="w-60" width="100%" />
@@ -159,7 +159,7 @@ const MobileNav = ({
             )}
           </div>
         </div>
-      </div>
+      {/* </div> */}
     </>
   );
 };

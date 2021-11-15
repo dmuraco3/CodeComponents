@@ -1,4 +1,5 @@
 import {PrismaClient} from '@prisma/client'
+import { MultiValue } from 'react-select'
 import internal from 'stream'
 const prisma = new PrismaClient()
 export async function getPosts(pageLength: number, cursor: number) {
@@ -17,6 +18,10 @@ export async function getPosts(pageLength: number, cursor: number) {
 export async function getPost() {
 
 }
+interface tag {
+    label: string;
+    value: string;
+} 
 
 interface Post {
     title: string;
@@ -24,9 +29,9 @@ interface Post {
     description: string;
     published: boolean;
     authorId: number;
-
+    tags: Array<tag>;
 }
-export async function createPost({title, content, description, published, authorId}: Post) {
+export async function createPost({title, content, description, published, authorId, tags}: Post) {
     const post = await prisma.post.create({
         data: {
             title,
@@ -37,7 +42,10 @@ export async function createPost({title, content, description, published, author
                 connect: {
                     id: authorId
                 }
-            }
+            },
+            tags: {
+                connect: tags.map(tag => {return {name: tag.label}}),
+            },
         }
     })
     return post

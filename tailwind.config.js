@@ -14,6 +14,12 @@ module.exports = {
       xl: '1280px',
 
     },
+    flex: {
+      post: '1 1 25%'
+    },
+    minWidth: {
+      'post': '300px'
+    },
     minWidth: {
       'gridItem': '200px',
     },
@@ -23,16 +29,23 @@ module.exports = {
       },
       dropShadow: {
         'cool': '0px 0px 4px rgba(0, 0, 0, 0.25)',
+        'active': '0px 0px 12px rgba(79, 70, 229, 0.6)'
       },
     },
     fontFamily: {
       inter: ['Inter', 'sans-serif'],
+    },
+    boxShadow: {
+      'cool': '0px 0px 4px rgba(0, 0, 0, 0.25)',
+      'active': '0px 0px 12px rgba(79, 70, 229, 0.6)'
     }
+
   },
   variants: {
     extend: {
       border: ['hover'],
       cursor: ['hover'],
+      dropShadow: ['hover', 'active'],
     },
   },
   plugins: [],

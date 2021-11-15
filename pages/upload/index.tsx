@@ -5,28 +5,59 @@ import { AuthedPage } from "../../types/AuthedPage";
 import Head from "next/head";
 
 import Editor from "@monaco-editor/react";
-// import} from "@monaco-editor/react/lib/types"
 import { useRef, useState } from "react";
 import { useRouter } from "next/router";
-import Link from "next/link";
 import { useSession } from "next-auth/client";
+import Select, { MultiValue } from 'react-select'
+import {GetServerSideProps, InferGetServerSidePropsType} from 'next'
+import {Prisma} from '@prisma/client'
+import GetTags from "../../helpers/tags/GetTags";
+import { animatedScrollTo } from "react-select/dist/declarations/src/utils";
+
 
 interface userComponent {
   title: string;
   content: string;
   description: string;
   published: boolean;
+  tags: MultiValue<{
+    label: string;
+    value: number;
+  }>;
 }
 
-const Upload: AuthedPage = (props) => {
+export const getServerSideProps: GetServerSideProps<{
+  tags: Prisma.PromiseReturnType<typeof GetTags>;
+}> = async (context) => {
+  const tags = await GetTags();
+  return {
+    props: {
+      tags
+    }
+  };
+};
+
+type tag = {
+  id: number;
+  name: string;
+  imgSrc: string;
+};
+
+const Upload: AuthedPage<InferGetServerSidePropsType<typeof getServerSideProps>> = (props: InferGetServerSidePropsType<typeof getServerSideProps>) => {
   const [componentData, setComponentData] = useState({
     title: "",
     content: "",
     description: "",
     published: true,
+    tags: [],
   } as userComponent);
 
   const [session, loading] = useSession()
+
+  const [tagsSelected, setTagsSelected] = useState<MultiValue<{
+    label: string;
+    value: number;
+  }>>()
 
   const editorRef: any = useRef();
 
@@ -56,7 +87,7 @@ const Upload: AuthedPage = (props) => {
     console.log(componentData);
     // router.push("/");
   };
-
+  const options = props.tags.map((tag) =>{ return {label: tag.name, value: tag.id}});
   return (
     <div className="mt-5 flex justify-center flex-wrap">
       <Head>
@@ -110,6 +141,10 @@ const Upload: AuthedPage = (props) => {
           onChange={handleEditorChange}
           onMount={handleEditorDidMount}
         />
+        <Select onChange={(e) => {
+          setComponentData({...componentData, tags: e})
+          }} value={tagsSelected} isMulti options={options}/>
+      
         <textarea
           onChange={(e) => {
             setComponentData({ ...componentData, description: e.target.value });
@@ -130,3 +165,4 @@ const Upload: AuthedPage = (props) => {
 export default Upload;
 
 Upload.needsAuth = true;
+
