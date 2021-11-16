@@ -1,6 +1,7 @@
 import '../styles/globals.css'
 import type { AppProps } from 'next/app'
 import NavBar from '../components/navbar'
+import Footer from '../components/footer'
 
 import {Provider, signIn, useSession} from 'next-auth/client'
 import { AuthedPageProps } from '../types/AuthedPage'
@@ -35,6 +36,7 @@ function MyApp({ Component, pageProps }: AuthedPageProps) {
       ) : (
         <Component {...pageProps} />
       )}
+      <Footer />
     </Provider>
   )
 }
