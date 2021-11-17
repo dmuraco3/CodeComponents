@@ -3,7 +3,7 @@ import Providers from 'next-auth/providers';
 import Adapters from 'next-auth/adapters';
 import { PrismaClient } from '@prisma/client';
 
-const prisma = new PrismaClient();
+import {prisma} from '../../../.db'
 
 export default NextAuth({
     secret: process.env.NEXT_AUTH_SECRET,

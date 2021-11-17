@@ -4,9 +4,9 @@ import Link from "next/link";
 
 import React, { Dispatch, SetStateAction, useState } from "react";
 
-import { FaBars, FaSearch, FaUserCircle, FaTimes } from "react-icons/fa";
+import { FaBars, FaSearch, FaUserCircle, FaTimes, FaHeart } from "react-icons/fa";
 
-import { signIn, signOut, useSession } from "next-auth/client";
+import { signIn, signout, signOut, useSession } from "next-auth/client";
 import { Session } from "next-auth";
 
 interface LinkProps {
@@ -171,6 +171,15 @@ const NavBar = () => {
 
   const [mobileNavShown, setMobileNavShown] = useState(false);
 
+  interface AccountNavLinkProps {
+    children?: React.ReactNode;
+    onClick: () => void;
+  }
+
+  const AccountNavLink: React.FC<{onClick?: () => void;}> = (props) => {
+    return <span onClick={props.onClick} className="block w-full hover:cursor-pointer my-2">{props.children}</span>
+  }
+
   return (
     <nav className="z-40 relative filter drop-shadow-cool h-14 block bg-white flex flex-row font-inter px-3">
       {/* logo container */}
@@ -273,15 +282,33 @@ const NavBar = () => {
               <div
                 className={`${
                   !accountNavShow ? "hidden" : "flex"
-                } absolute bg-white filter drop-shadow-cool transform -translate-x-full translate-y-12 w-40 flex-wrap justify-center px-5`}
+                } absolute bg-white filter drop-shadow-cool transform -translate-x-3/4 translate-y-11 w-40 flex-wrap justify-center px-5 text-gray-800 py-10 rounded-md text-md font-inter`}
               >
-                <button 
-                  onClick={(e) => {
-                    e.preventDefault()
-                    signOut()
-                  }}
-                  className="px-4 py-2 border-4 border-black"
-                >Sign Out</button>
+                <div className="w-full">
+                  <span>Profile</span>
+                </div>
+
+                <div className="h-px w-full bg-gray-400 my-2"/> {/*divider*/}
+
+                <div className="w-full">
+                  <span className="flex items-center">
+                    <FaHeart className="mr-2"/>
+                    My Liked
+                  </span>
+                </div>
+
+                <div className="h-px w-full bg-gray-400 my-2"/> {/*divider*/}
+
+                <div>
+                  <AccountNavLink>
+                    Account Settings
+                  </AccountNavLink>
+                  <AccountNavLink onClick={() => {signout()}}>
+                    <a >Sign Out</a>
+                  </AccountNavLink>
+
+                </div>
+
               </div>
             </div>
           )}

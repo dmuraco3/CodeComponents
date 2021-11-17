@@ -2,7 +2,7 @@ import { NextApiRequest, NextApiResponse } from "next";
 import {PrismaClient} from '@prisma/client';
 import { TypeORMUserModel } from "@next-auth/typeorm-legacy-adapter";
 
-const prisma = new PrismaClient();
+import {prisma} from '../../../.db'
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
     const posts = await prisma.post.findMany({

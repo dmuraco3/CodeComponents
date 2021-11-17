@@ -1,7 +1,7 @@
 import {PrismaClient} from '@prisma/client'
 import { MultiValue } from 'react-select'
 import internal from 'stream'
-const prisma = new PrismaClient()
+import {prisma} from '../.db'
 export async function getPosts(pageLength: number, cursor: number) {
     const posts = await prisma.post.findMany({
         cursor: {

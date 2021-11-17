@@ -1,6 +1,6 @@
 import { PrismaClient } from "@prisma/client";
 
-const prisma = new PrismaClient();
+import {prisma} from '../../.db'
 
 export default async function GetTags() {
   const tags = await prisma.tag.findMany();
