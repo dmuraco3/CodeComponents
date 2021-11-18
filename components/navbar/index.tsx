@@ -282,7 +282,7 @@ const NavBar = () => {
               <div
                 className={`${
                   !accountNavShow ? "hidden" : "flex"
-                } absolute bg-white filter drop-shadow-cool transform -translate-x-3/4 translate-y-11 w-40 flex-wrap justify-center px-5 text-gray-800 py-10 rounded-md text-md font-inter`}
+                } absolute bg-white filter drop-shadow-cool transform -translate-x-3/4 translate-y-11 w-40 flex-wrap justify-center px-5 text-gray-800 py-5 rounded-md text-md font-inter`}
               >
                 <div className="w-full">
                   <span>Profile</span>
@@ -300,9 +300,11 @@ const NavBar = () => {
                 <div className="h-px w-full bg-gray-400 my-2"/> {/*divider*/}
 
                 <div>
-                  <AccountNavLink>
-                    Account Settings
-                  </AccountNavLink>
+                  <Link href="/settings">
+                    <AccountNavLink>
+                      Account Settings
+                    </AccountNavLink>
+                  </Link>
                   <AccountNavLink onClick={() => {signout()}}>
                     <a >Sign Out</a>
                   </AccountNavLink>

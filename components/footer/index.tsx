@@ -1,12 +1,34 @@
 import { useSession, signIn } from "next-auth/client"
 import Image from 'next/image'
+import { useEffect, useState } from "react"
 
 import { FaFacebook, FaInstagram, FaInstagramSquare, FaTwitter, FaYoutube } from "react-icons/fa"
 
 export default function Footer() {
     const [session, loading] = useSession()
+    const [windowObserved, setWindowObserved] = useState(false)
+    const [toBottom, setToBottom] = useState(true)
+    const checkWindow = () => {
+        const innerHeight = window.innerHeight;
+        if (document.body.scrollHeight <= innerHeight) {
+            setToBottom(true)
+        } else {
+            setToBottom(false)
+        }
+
+    }
+    useEffect(() => {
+        if(!windowObserved) {
+            window.addEventListener("resize", checkWindow);
+            const resizeObserver = new ResizeObserver(checkWindow)
+            resizeObserver.observe(document.body)
+            setWindowObserved(true)
+        }
+        checkWindow()
+    }, [])
+
     return (
-        <footer className="filter drop-shadow-cool bg-white pt-4 font-inter">
+        <footer className={`${toBottom ? "fixed bottom-0 w-screen" : ""} filter drop-shadow-cool bg-white pt-4 font-inter`}>
             <main className="flex">
                 <div className="w-8/12 grid grid-cols-3 mx-8">
                     <div>

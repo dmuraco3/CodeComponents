@@ -12,8 +12,8 @@ import Select, { MultiValue } from 'react-select'
 import {GetServerSideProps, InferGetServerSidePropsType} from 'next'
 import {Prisma} from '@prisma/client'
 import GetTags from "../../helpers/tags/GetTags";
-import { animatedScrollTo } from "react-select/dist/declarations/src/utils";
 
+import ImageUploading, {ImageListType} from 'react-images-uploading';
 
 interface userComponent {
   title: string;
@@ -53,6 +53,21 @@ const Upload: AuthedPage<InferGetServerSidePropsType<typeof getServerSideProps>>
   } as userComponent);
 
   const [session, loading] = useSession()
+
+  const [editorShown, setEditorShown] = useState(false);
+  
+  const [images, setImages] = useState([]);
+  const maxNumber = 1;
+
+  const onChange = (
+    imageList: ImageListType,
+    addUpdateIndex: number[] | undefined
+  ) => {
+    // data for submit
+    console.log(imageList, addUpdateIndex);
+    setImages(imageList as never[]);
+  };
+
 
   const [tagsSelected, setTagsSelected] = useState<MultiValue<{
     label: string;
@@ -132,15 +147,70 @@ const Upload: AuthedPage<InferGetServerSidePropsType<typeof getServerSideProps>>
           className="resize-none text-gray-600  focus:outline-none w-full text-xl font-semibold"
           placeholder="Give your component a name"
         />
-        <div className="h-10 w-full bg-editor"></div>
-        <Editor
-          height="600px"
-          language="javascript"
-          theme="vs-dark"
-          value={componentData.content}
-          onChange={handleEditorChange}
-          onMount={handleEditorDidMount}
-        />
+        <div
+          className="filter drop-shadow-cool bg-white rounded-md"
+        >
+          {editorShown 
+          ? 
+          (
+            <div>
+              <div className="h-10 w-full bg-editor"></div>
+              <Editor
+                height="600px"
+                language="javascript"
+                theme="vs-dark"
+                value={componentData.content}
+                onChange={handleEditorChange}
+                onMount={handleEditorDidMount}
+              />
+            </div>
+          )
+          :
+          (
+            <div>
+              <ImageUploading
+                multiple={false}
+                value={images}
+                onChange={onChange}
+                maxNumber={maxNumber}
+              >
+                {({
+                  imageList,
+                  onImageUpload,
+                  onImageRemoveAll,
+                  onImageUpdate,
+                  onImageRemove,
+                  isDragging,
+                  dragProps
+                }) => (
+                  // write your building UI
+                  <div className="py-20 border-2 rounded-md border-gray-400 border-dotted">
+                    <div
+                      style={isDragging ? { color: "red" } : undefined}
+                      onClick={onImageUpload}
+                      {...dragProps}
+                      className=""
+                    >
+                      <h1 className="w-full text-center font-semibold">Drag and Drop an image, or <button className="text-indigo-600" onClick={(e) => {e.preventDefault()}}>Browse</button></h1>
+                    </div>
+                    {imageList.map((image, index) => (
+                      <div key={index} className="image-item">
+                        <img src={image.dataURL} alt="" width="100" />
+                        <div className="image-item__btn-wrapper">
+                          <button onClick={() => onImageUpdate(index)}>Update</button>
+                          <button onClick={() => onImageRemove(index)}>Remove</button>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                )}
+              </ImageUploading>
+            </div>
+          )
+          }
+
+        </div>
+        
         <Select onChange={(e) => {
           setComponentData({...componentData, tags: e})
           }} value={tagsSelected} isMulti options={options}/>
