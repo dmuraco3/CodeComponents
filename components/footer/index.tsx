@@ -29,7 +29,7 @@ export default function Footer() {
                     </div>
 
                 </div>
-                <div className="w-4/12">
+                <div className="w-4/12 flex items-center justify-center flex-wrap">
                     {!session && (
                         <div className="w-full flex items-center flex-wrap justify-center">
                             <h1 className="text-2xl font-medium w-full text-center mb-3">Discover Code</h1>
@@ -58,6 +58,15 @@ export default function Footer() {
                     </div>
                 </div>
             </main>
+            <div className="border-t border-black bg-white px-4 py-1 flex justify-between">
+                <span className="text-sm">© 2021 CodeComponents</span>
+                <span className="flex items-center">
+                    <a>Terms & Conditions</a>
+                    <div className="mx-2 rounded-full w-2 h-2 bg-black"/>
+                    <a>Privacy Policy</a>
+
+                </span>
+            </div>
         </footer>
     )
 }
