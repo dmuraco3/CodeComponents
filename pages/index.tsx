@@ -6,7 +6,7 @@ import type {
 } from "next";
 import { Prisma } from "@prisma/client";
 
-import { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef} from "react";
 import Image from "next/image";
 
 import GetTags from "../helpers/tags/GetTags";
@@ -36,7 +36,7 @@ export const getServerSideProps: GetServerSideProps<{
 }> = async (context) => {
   const tags = await GetTags();
   return {
-    props: {
+    props: {  
       tags
     }
   };
@@ -50,6 +50,18 @@ const Home: NextPage<InferGetServerSidePropsType<typeof getServerSideProps>> = (
 
   const [posts, setPosts] = useState<Array<post> | null>(null)
 
+  const refs: { 
+    [key: string]: any 
+  }  = useRef(props.tags.map(() => React.createRef()));
+
+  useEffect(() => {
+      const random: number =  Math.floor(Math.random() * (props.tags.length - 1)) 
+      const item = props.tags[parseInt(refs.current[random].current.id)] as tag
+      setActiveTag(item as tag)
+      getPostsWithTag(item as tag)
+
+  }, [refs])
+
   const getPostsWithTag = async (tag: tag) => {
     const params = new URLSearchParams({
       id: tag.id.toString(),
@@ -59,6 +71,8 @@ const Home: NextPage<InferGetServerSidePropsType<typeof getServerSideProps>> = (
       .then(res => res.json())
       .then(data => setPosts(data))
   }
+
+  const random: number = Math.floor(Math.random() * props.tags.length)
 
   return (
     <div>
@@ -89,6 +103,9 @@ const Home: NextPage<InferGetServerSidePropsType<typeof getServerSideProps>> = (
             // <Link href="/upload" key={index}>
               <div 
                 className={`${activeTag?.id === item.id ? "shadow-active " : "shadow-cool"} hover:shadow-active hover:cursor-pointer  transition-all duration-300 ease-in-out mx-4 rounded-lg w-52 float-left w-48 px-4 py-3 flex justify-left items-center shadow filter bg-white`}
+                id={index.toString()}
+                key={index}
+                ref={refs.current[index]}
                 onClick={(e) => {
                   e.preventDefault();
                   if (activeTag?.id === item.id) {
