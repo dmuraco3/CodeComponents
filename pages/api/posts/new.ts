@@ -10,17 +10,9 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
   if (req.method === "POST") { 
     const session = await getSession({ req });
     if(session) {
-      console.log(JSON.parse(req.body))
-      const post = await createPost({...JSON.parse(req.body), authorId: session.user.id});
-      if(post) {
-        res.status(200).json({success: true})
-
-      } else {
-        res.status(500).json({success: false})
-      }
-
-    } else {
-      res.status(401).json({success: false})
+      const data = JSON.parse(req.body)
+      console.log(typeof data)
+      res.status(200)
     }
   } else {
     res.status(405).json({ message: "method not allowed" });

@@ -5,7 +5,7 @@ import { AuthedPage } from "../../types/AuthedPage";
 import Head from "next/head";
 
 import Editor from "@monaco-editor/react";
-import { useRef, useState } from "react";
+import { Component, useRef, useState } from "react";
 import { useRouter } from "next/router";
 import { useSession } from "next-auth/client";
 import Select, { MultiValue } from 'react-select'
@@ -14,16 +14,19 @@ import {Prisma} from '@prisma/client'
 import GetTags from "../../helpers/tags/GetTags";
 
 import ImageUploading, {ImageListType} from 'react-images-uploading';
+import Cropper from 'react-cropper'
+import { FaTimes } from "react-icons/fa";
 
-interface userComponent {
+type userComponent = {
   title: string;
+  image: string;
   content: string;
   description: string;
   published: boolean;
   tags: MultiValue<{
     label: string;
     value: number;
-  }>;
+  }>
 }
 
 export const getServerSideProps: GetServerSideProps<{
@@ -44,27 +47,36 @@ type tag = {
 };
 
 const Upload: AuthedPage<InferGetServerSidePropsType<typeof getServerSideProps>> = (props: InferGetServerSidePropsType<typeof getServerSideProps>) => {
-  const [componentData, setComponentData] = useState({
+  const [componentData, setComponentData] = useState<userComponent>({
     title: "",
+    image: "",
     content: "",
     description: "",
     published: true,
     tags: [],
   } as userComponent);
 
+  const [data, setData] = useState()
+
   const [session, loading] = useSession()
 
   const [editorShown, setEditorShown] = useState(false);
   
   const [images, setImages] = useState([]);
+  const [croppedImage, setCroppedImage] = useState<string | undefined>()
   const maxNumber = 1;
+  const cropperRef = useRef<HTMLImageElement>(null);
+  const onCrop = () => {
+    const imageElement: any = cropperRef?.current;
+    const cropper: any = imageElement?.cropper;
+    setComponentData({...componentData, image: cropper.getCroppedCanvas().toDataURL()})
+  };
 
   const onChange = (
     imageList: ImageListType,
     addUpdateIndex: number[] | undefined
   ) => {
     // data for submit
-    console.log(imageList, addUpdateIndex);
     setImages(imageList as never[]);
   };
 
@@ -77,7 +89,6 @@ const Upload: AuthedPage<InferGetServerSidePropsType<typeof getServerSideProps>>
   const editorRef: any = useRef();
 
   function handleEditorDidMount(editor: any, monaco: any) {
-    console.log(typeof editor);
     editorRef.current = editor;
   }
 
@@ -95,11 +106,10 @@ const Upload: AuthedPage<InferGetServerSidePropsType<typeof getServerSideProps>>
   const publish = () => {
     fetch(`${process.env.NEXT_PUBLIC_URL}/api/posts/new`, {
       method: "POST",
-      body: JSON.stringify({ ...componentData})
+      body: JSON.stringify(componentData)
     })
       .then((res) => res.json())
       .then((json) => console.log(json));
-    console.log(componentData);
     // router.push("/");
   };
   const options = props.tags.map((tag) =>{ return {label: tag.name, value: tag.id}});
@@ -150,70 +160,77 @@ const Upload: AuthedPage<InferGetServerSidePropsType<typeof getServerSideProps>>
         <div
           className="filter drop-shadow-cool bg-white rounded-md"
         >
-          {editorShown 
-          ? 
-          (
-            <div>
-              <div className="h-10 w-full bg-editor"></div>
-              <Editor
-                height="600px"
-                language="javascript"
-                theme="vs-dark"
-                value={componentData.content}
-                onChange={handleEditorChange}
-                onMount={handleEditorDidMount}
-              />
-            </div>
-          )
-          :
-          (
-            <div>
-              <ImageUploading
-                multiple={false}
-                value={images}
-                onChange={onChange}
-                maxNumber={maxNumber}
-              >
-                {({
-                  imageList,
-                  onImageUpload,
-                  onImageRemoveAll,
-                  onImageUpdate,
-                  onImageRemove,
-                  isDragging,
-                  dragProps
-                }) => (
-                  // write your building UI
-                  <div className="py-20 border-2 rounded-md border-gray-400 border-dotted">
-                    <div
-                      style={isDragging ? { color: "red" } : undefined}
-                      onClick={onImageUpload}
-                      {...dragProps}
-                      className=""
-                    >
-                      <h1 className="w-full text-center font-semibold">Drag and Drop an image, or <button className="text-indigo-600" onClick={(e) => {e.preventDefault()}}>Browse</button></h1>
-                    </div>
-                    {imageList.map((image, index) => (
-                      <div key={index} className="image-item">
-                        <img src={image.dataURL} alt="" width="100" />
-                        <div className="image-item__btn-wrapper">
-                          <button onClick={() => onImageUpdate(index)}>Update</button>
-                          <button onClick={() => onImageRemove(index)}>Remove</button>
-                        </div>
-                      </div>
-                    ))}
+          <ImageUploading
+            multiple={false}
+            value={images}
+            onChange={onChange}
+            maxNumber={maxNumber}
+          >
+            {({
+              imageList,
+              onImageUpload,
+              onImageRemoveAll,
+              onImageUpdate,
+              onImageRemove,
+              isDragging,
+              dragProps
+            }) => (
+              // write your building UI
+              <>
+                {imageList.length === 0 ?
+                <div className="py-20 border-2 rounded-tl-md rounded-tr-md border-gray-400 border-dotted">
+                  <div
+                    style={isDragging ? { color: "red" } : undefined}
+                    onClick={onImageUpload}
+                    {...dragProps}
+                    className=""
+                  >
+                    <h1 className="w-full text-center font-semibold">Drag and Drop an image, or <button className="text-indigo-600" onClick={(e) => {e.preventDefault()}}>Browse</button></h1>
                   </div>
-                )}
-              </ImageUploading>
-            </div>
-          )
-          }
-
+                </div>
+                :
+                <div className="relative">
+                  <FaTimes 
+                    size={40}
+                    className="absolute top-0 right-0 z-30 hover:cursor-pointer text-red-500 filter drop-shadow-cool transform hover:scale-125 transition-transform duration-300 ease-in-out"
+                    onClick={() => {
+                      onImageRemove(0)
+                    }}
+                  />
+                  <Cropper
+                    src={imageList[0].dataURL}
+                    style={{ height: 400, width: "100%" }}
+                    // Cropper.js options
+                    initialAspectRatio={9 / 9}
+                    cropBoxResizable={false}
+                    guides={false}
+                    crop={onCrop}
+                    ref={cropperRef}
+                  />
+                </div>  
+              }
+                
+              
+              </>
+            )}
+          </ImageUploading>
+          <Editor
+            height="600px"
+            language="javascript"
+            theme="vs-dark"
+            value={componentData.content}
+            onChange={handleEditorChange}
+            onMount={handleEditorDidMount}
+          />
         </div>
         
-        <Select onChange={(e) => {
-          setComponentData({...componentData, tags: e})
-          }} value={tagsSelected} isMulti options={options}/>
+
+        <div className="mt-4">
+          <Select onChange={(e) => {
+            setComponentData({...componentData, tags: e})
+            }} value={tagsSelected} isMulti options={options} placeholder="Select Tags"/>
+
+        </div>
       
         <textarea
           onChange={(e) => {
@@ -223,10 +240,7 @@ const Upload: AuthedPage<InferGetServerSidePropsType<typeof getServerSideProps>>
           className="w-full focus:outline-none mt-8"
           placeholder="Describe what your component does..."
         />
-        <button onClick={(e) => {
-          e.preventDefault()
-          console.log(session)
-        }}>click em</button>
+
       </main>
     </div>
   );

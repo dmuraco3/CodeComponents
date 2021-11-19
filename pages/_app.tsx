@@ -1,4 +1,5 @@
 import '../styles/globals.css'
+import 'cropperjs/dist/cropper.css'
 import type { AppProps } from 'next/app'
 import NavBar from '../components/navbar'
 import Footer from '../components/footer'

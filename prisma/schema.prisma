@@ -73,6 +73,7 @@ model Post {
   description String
   published   Boolean  @default(false)
   author      User     @relation(fields: [authorId], references: [id])
+  images      String[]
   authorId    Int
   tags Tag[]
 }
