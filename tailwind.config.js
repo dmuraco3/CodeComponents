@@ -48,5 +48,7 @@ module.exports = {
       dropShadow: ['hover', 'active'],
     },
   },
-  plugins: [],
+  plugins: [
+    require('@tailwindcss/aspect-ratio'),
+  ],
 }

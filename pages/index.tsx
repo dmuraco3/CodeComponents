@@ -28,7 +28,8 @@ type post = {
   author: {
     name: string;
     image: string;
-  }
+  },
+  images: string[];
 }
 
 export const getServerSideProps: GetServerSideProps<{
@@ -137,10 +138,11 @@ const Home: NextPage<InferGetServerSidePropsType<typeof getServerSideProps>> = (
         <div className="flex posts-layout pb-40 font-inter">
           {posts.map((item, index) => (
             <div key={index} className="flex-post post min-w-post w-1/4 px-4">
-              <div className="w-full h-72">
-                <SyntaxHighlighter language="typescript" className="h-full" style={atomDark}>
+              <div className="w-full aspect-w-1 aspect-h-1 bg-gray-100 relative rounded-2xl overflow-hidden">
+                {/* <SyntaxHighlighter language="typescript" className="h-full" style={atomDark}>
                   {item.content}
-                </SyntaxHighlighter>
+                </SyntaxHighlighter> */}
+                <Image src={item.images[0]} layout="fill" objectFit="cover"/>
               </div>
               <div className="mx-2 mt-2">
                 <span className="text-lg">{item.title}</span>

@@ -23,15 +23,16 @@ interface tag {
     value: string;
 } 
 
-interface Post {
+export interface Post {
     title: string;
     content: string;
     description: string;
     published: boolean;
     authorId: number;
     tags: Array<tag>;
+    images: string[];
 }
-export async function createPost({title, content, description, published, authorId, tags}: Post) {
+export async function createPost({title, images, content, description, published, authorId, tags}: Post) {
     const post = await prisma.post.create({
         data: {
             title,
@@ -46,6 +47,7 @@ export async function createPost({title, content, description, published, author
             tags: {
                 connect: tags.map(tag => {return {name: tag.label}}),
             },
+            images: images,
         }
     })
     return post

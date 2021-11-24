@@ -18,6 +18,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
             title: true,
             content: true,
             description: true,
+            images: true,
             author: {
                 select: {
                     name: true,
