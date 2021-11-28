@@ -44,12 +44,14 @@ model Session {
 
 model User {
   id            Int       @default(autoincrement()) @id
-  name          String?
+  name          String?   @unique
   email         String?   @unique
   emailVerified DateTime? @map(name: "email_verified")
   image         String?
   createdAt     DateTime  @default(now()) @map(name: "created_at")
   updatedAt     DateTime  @default(now()) @map(name: "updated_at")
+  followers     Follows[] @relation("follower")
+  following     Follows[] @relation("following")
   posts         Post[] 
 
   @@map(name: "users")
@@ -64,6 +66,15 @@ model VerificationRequest {
   updatedAt  DateTime  @default(now()) @map(name: "updated_at")
 
   @@map(name: "verification_requests")
+}
+
+model Follows {
+  follower    User @relation("follower", fields: [followerId], references: [id])
+  followerId  Int
+  following   User @relation("following", fields: [followingId], references: [id])
+  followingId Int
+
+  @@id([followerId, followingId])
 }
 
 model Post {

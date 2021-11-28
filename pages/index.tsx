@@ -11,10 +11,9 @@ import Image from "next/image";
 
 import GetTags from "../helpers/tags/GetTags";
 import { useSession, signIn } from "next-auth/client";
-
-import {Prism as SyntaxHighlighter} from 'react-syntax-highlighter';
-import { atomDark } from 'react-syntax-highlighter/dist/cjs/styles/prism';
-
+import Link from 'next/link'
+import { useRouter } from "next/router";
+import Post from "../components/post";
 type tag = {
   id: number;
   name: string;
@@ -25,9 +24,12 @@ type post = {
   title: string;
   content: string;
   description: string;
+  tags: tag[];
+  following: boolean;
   author: {
     name: string;
     image: string;
+    id: string;
   },
   images: string[];
 }
@@ -49,19 +51,41 @@ const Home: NextPage<InferGetServerSidePropsType<typeof getServerSideProps>> = (
   const [activeTag, setActiveTag] = useState<tag | null>(null);
   const [session, loading] = useSession();
 
+  const [currentPost, setCurrentPost] = useState<post | null>(null);
+
   const [posts, setPosts] = useState<Array<post> | null>(null)
+
+  const [height, setHeight] = useState(0);
+  const [heightListener, setHeightListener] = useState<ResizeObserver>();
+
+
+  const router = useRouter()
 
   const refs: { 
     [key: string]: any 
   }  = useRef(props.tags.map(() => React.createRef()));
 
   useEffect(() => {
+      if(!heightListener){
+        const resizeObserver = new ResizeObserver(() => {
+          console.log(window.document.body.offsetHeight)
+          setHeight(document.body.scrollHeight);
+        });
+        resizeObserver.observe(document.body)
+        setHeightListener(resizeObserver)
+      }
+    
       const random: number =  Math.floor(Math.random() * (props.tags.length - 1)) 
       const item = props.tags[parseInt(refs.current[random].current.id)] as tag
       setActiveTag(item as tag)
       getPostsWithTag(item as tag)
 
   }, [refs])
+
+  const closeModal = () => {
+    router.push("/")
+    setCurrentPost(null)
+  }
 
   const getPostsWithTag = async (tag: tag) => {
     const params = new URLSearchParams({
@@ -135,28 +159,51 @@ const Home: NextPage<InferGetServerSidePropsType<typeof getServerSideProps>> = (
       )}
       {/* where posts are rendered after tag is selected */}
       {posts && (
-        <div className="flex posts-layout pb-40 font-inter">
-          {posts.map((item, index) => (
-            <div key={index} className="flex-post post min-w-post w-1/4 px-4">
-              <div className="w-full aspect-w-1 aspect-h-1 bg-gray-100 relative rounded-2xl overflow-hidden">
-                {/* <SyntaxHighlighter language="typescript" className="h-full" style={atomDark}>
-                  {item.content}
-                </SyntaxHighlighter> */}
-                <Image src={item.images[0]} layout="fill" objectFit="cover"/>
-              </div>
-              <div className="mx-2 mt-2">
-                <span className="text-lg">{item.title}</span>
-              </div>
-              <div className="mt-2">
-                {/* where user info is displayed */}
-                <div className="flex items-center">
-                  <Image src={item.author.image} className="rounded-full" width="30px" height="30px"/>
-                  <span className="ml-2">{item.author.name}</span>
-                </div>
+        <>
+          <div className="static flex posts-layout pb-40 font-inter">
+
+            <div className={`${!!router.query.postId ? "block" : "hidden "} absolute  w-full h-screen bg-white z-50 top-0 left-0 bottom-0 right-0`}>
+              
+              <div style={{height:`${height}px`}} className="bg-opacity-75 absolute z-60 w-full top-0 right-0 bottom-0 left-0 bg-gray-600 hover:cursor-pointer" onClick={() => {
+                router.push('/')
+                setCurrentPost(null)
+              }}/>
+              <div  className="md:w-full w-full  rounded-tl-lg rounded-tr-lg absolute z-60 top-5 bg-white transform ">
+                <span className="font-bold text-4xl absolute top-2 right-5 hover:cursor-pointer" onClick={() => {
+                  router.push("/")
+                  setCurrentPost(null)
+
+                }}>x</span>
+                {currentPost && <Post  Post={currentPost as post}/>}
+                
+
               </div>
             </div>
-          ))}
-        </div>
+            {posts.map((item, index) => (
+              <div key={index} className="flex-post post min-w-post w-1/4 px-4">
+                <Link href={`/?postId=${item.id}`} as={`/post/${item.id}`}>
+                  <div className="w-full aspect-w-1 aspect-h-1 bg-gray-100 relative rounded-2xl overflow-hidden" onClick={() => {setCurrentPost(item)}}>
+                    {/* <SyntaxHighlighter language="typescript" className="h-full" style={atomDark}>
+                      {item.content}
+                    </SyntaxHighlighter> */}
+                    <Image src={item.images[0]} layout="fill" objectFit="cover"/>
+                  </div>
+                
+                </Link>
+                <div className="mx-2 mt-2">
+                  <span className="text-lg">{item.title}</span>
+                </div>
+                <div className="mt-2">
+                  {/* where user info is displayed */}
+                  <div className="flex items-center">
+                    <Image src={item.author.image} className="rounded-full" width="30px" height="30px"/>
+                    <span className="ml-2">{item.author.name}</span>
+                  </div>
+                </div>
+              </div>
+            ))}
+          </div>
+        </>
       )}
     </div>
   );
