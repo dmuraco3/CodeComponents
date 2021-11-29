@@ -52,7 +52,8 @@ model User {
   updatedAt     DateTime  @default(now()) @map(name: "updated_at")
   followers     Follows[] @relation("follower")
   following     Follows[] @relation("following")
-  posts         Post[] 
+  posts         Post[]
+  likes         Post[]    @relation("likes")
 
   @@map(name: "users")
 }
@@ -77,6 +78,7 @@ model Follows {
   @@id([followerId, followingId])
 }
 
+
 model Post {
   id          Int      @id @default(autoincrement())
   title       String
@@ -86,6 +88,7 @@ model Post {
   author      User     @relation(fields: [authorId], references: [id])
   images      String[]
   authorId    Int
+  likes       User[]  @relation("likes")
   tags Tag[]
 }
 

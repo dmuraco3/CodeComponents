@@ -68,7 +68,6 @@ const Home: NextPage<InferGetServerSidePropsType<typeof getServerSideProps>> = (
   useEffect(() => {
       if(!heightListener){
         const resizeObserver = new ResizeObserver(() => {
-          console.log(window.document.body.offsetHeight)
           setHeight(document.body.scrollHeight);
         });
         resizeObserver.observe(document.body)

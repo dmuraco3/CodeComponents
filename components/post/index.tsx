@@ -9,6 +9,7 @@ const Post: React.FC<{Post: post}> = ({Post}) => {
     const [post, setPost] = useState<post|undefined>();
     const [postsByUser, setPostsByUser] = useState<post[]|undefined>();
     const [follows, setFollows] = useState<boolean|undefined>();
+    const [likes, setLikes] = useState<boolean|undefined>()
 
     const [imageShow, setImageShow] = useState<boolean>(false);
 
@@ -27,10 +28,21 @@ const Post: React.FC<{Post: post}> = ({Post}) => {
         const followParams = new URLSearchParams({
             userId: Post.author.id,
         })
+
         fetch(`/api/user/follow?${followParams}`)
         .then(res => res.json())
         .then(res => {
             setFollows(res.following)
+        })
+
+        const likeParams = new URLSearchParams({
+            postId: Post.id.toString()
+        })
+
+        fetch(`/api/user/like?${likeParams}`)
+        .then(res => res.json())
+        .then(res => {
+            setLikes(res.likes)
         })
 
 
@@ -91,7 +103,32 @@ const Post: React.FC<{Post: post}> = ({Post}) => {
                     </div>
                 
                     <div className="w-3/12 flex justify-end items-center">
-                            <button className="flex items-center font-medium bg-gray-300 h-10 px-2 py-1 rounded-lg"><FaHeart size={20} className="mr-1" />Favorite </button>
+                            <button className="flex items-center font-medium bg-gray-300 h-10 px-2 py-1 rounded-lg" onClick={(e) => {
+                                if(likes !== undefined) {
+                                    e.preventDefault()
+                                    fetch(`/api/user/like`, {
+                                        method: 'POST',
+                                        body: JSON.stringify({postId: Post.id})
+                                    })
+                                    .then(res => res.json())
+                                    .then(json => {
+                                        setLikes(json.likes)
+                                    })
+
+                                }
+                                
+                            }}>
+                                {likes === undefined ? (
+                                    <div>
+                                        {/* todo : turn this into a spinner*/}
+                                        LOADING
+                                    </div>
+                                ) : (
+                                    <div className="flex">
+                                        <FaHeart size={20} className={`mr-1 ${likes ? "text-red-600" : "text-black"}`} /> {likes ? "Delike" : "Like"} 
+                                    </div>
+                                )}
+                            </button>
                     </div>
                 </div>
                 <div className="flex md:hidden flex-wrap">
