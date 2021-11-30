@@ -104,7 +104,7 @@ const Home: NextPage<InferGetServerSidePropsType<typeof getServerSideProps>> = (
         <div className="flex font-inter px-16 py-10 bg-indigo-200 bg-opacity-50">
           <div className="w-1/2 mt-10">
             <h1 className="text-5xl font-semibold">Find the solution to your technical problem</h1>
-            <h5 className="text-lg mt-10">Share your code and find other's code</h5>
+            <h5 className="text-lg mt-10">Share your code and find other&apos;s code</h5>
             <button
               className="mt-4 whitespace-nowrap transition duration-500 ease-in-out transform hover:scale-125  flex items-center text-xl text-white bg-indigo-600 px-6 py-3 rounded-xl"
               onClick={(e) => {

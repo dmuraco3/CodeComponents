@@ -54,6 +54,7 @@ model User {
   following     Follows[] @relation("following")
   posts         Post[]
   likes         Post[]    @relation("likes")
+  comments      Comment[] 
 
   @@map(name: "users")
 }
@@ -89,7 +90,8 @@ model Post {
   images      String[]
   authorId    Int
   likes       User[]  @relation("likes")
-  tags Tag[]
+  tags        Tag[]
+  comments    Comment[]
 }
 
 model Tag {
@@ -97,4 +99,18 @@ model Tag {
   name    String @unique
   imgSrc  String? 
   posts   Post[]
+}
+
+model Comment {
+  id         Int        @id @default(autoincrement())
+  message    String 
+  createdAt  DateTime   @default(now()) @map(name: "created_at")
+  updatedAt  DateTime   @default(now()) @map(name: "updated_at")
+  user       User       @relation(fields: [userId], references: [id])
+  userId     Int
+  post       Post       @relation(fields: [postId], references: [id])
+  postId     Int 
+  parentId   Int?
+  parent     Comment?   @relation("commentParent", fields: [parentId], references: [id])
+  replies    Comment[]  @relation("commentParent")
 }
