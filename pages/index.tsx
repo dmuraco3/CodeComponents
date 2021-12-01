@@ -161,7 +161,7 @@ const Home: NextPage<InferGetServerSidePropsType<typeof getServerSideProps>> = (
         <>
           <div className="static flex posts-layout pb-40 font-inter mb-10 md:mx-16 mx-4 justify-center sm:justify-start">
 
-            <div className={`${!!router.query.postId ? "block" : "hidden "} absolute  w-full h-screen bg-white z-50 top-0 left-0 bottom-0 right-0`}>
+            <div className={`${!!router.query.postId ? "block" : "hidden "} absolute  w-full h-screen bg-white z-50 top-0 left-0 bottom-0 right-0 ${currentPost ? "block" : "hidden "}`}>
               
               <div style={{height:`${height}px`}} className="bg-opacity-75 absolute z-60 w-full top-0 right-0 bottom-0 left-0 bg-gray-600 hover:cursor-pointer" onClick={() => {
                 router.push('/')

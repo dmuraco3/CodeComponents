@@ -162,15 +162,15 @@ const Post: React.FC<{Post: post}> = ({Post}) => {
                     </div>
                     <h1 className="w-full text-center text-lg my-4 font-semibold">{Post.title}</h1>
                 </div>
-                <div className="md:px-2/12 lg:px-3/12 xl:px-3/12">
+                <div className="md:px-2/12 lg:px-3/12 xl:px-3/12 mt-8">
                     <div className="w-full relative  bg-gray-100 md:rounded-2xl rounded-none flex items-center flex-col justify-center">
                         
-                        <div className={`${ imageShow ? "absolute top-0 left-1/2 flex z-60 transform -translate-x-1/2" : "w-full flex justify-center items-center"} `}>
+                        <div className={` absolute -top-11 left-1/2 flex z-60 transform -translate-x-1/2  rounded-tl-lg rounded-tr-lg bg-gray-300 w-max`}>
                             {/* controls for showing image */}
-                            <div className={`mx-4 hover:cursor-pointer ${!imageShow ? "font-bold" : ""}`} onClick={() => {
+                            <div className={` hover:cursor-pointer border-2 py-2 px-6 border-gray-500 rounded-tl-lg ${!imageShow ? "font-bold" : ""}`} onClick={() => {
                                 setImageShow(false)
                             }}>CODE</div>
-                            <div className={`mx-4 hover:cursor-pointer ${imageShow ? "font-bold" : ""}`} onClick={() => {
+                            <div className={` hover:cursor-pointer border-2 py-2 px-6 border-gray-500 rounded-tr-lg ${imageShow ? "font-bold" : ""}`} onClick={() => {
                                 setImageShow(true)
                             }}>IMAGE</div>
                         </div>

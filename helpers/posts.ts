@@ -2,6 +2,31 @@ import {PrismaClient} from '@prisma/client'
 import { MultiValue } from 'react-select'
 import internal from 'stream'
 import {prisma} from '../.db'
+
+export async function getPostById(id: number) {
+    const post = await prisma.post.findMany({
+        where: {
+            id
+        },
+        select: {
+            id: true,
+            title: true,
+            content: true,
+            description: true,
+            images: true,
+            tags: true,
+            author: {
+                select: {
+                    name: true,
+                    image: true,
+                    id: true,
+                }
+            }
+        }
+    })
+}
+
+
 export async function getPosts(pageLength: number, cursor: number) {
     const posts = await prisma.post.findMany({
         cursor: {
@@ -13,6 +38,16 @@ export async function getPosts(pageLength: number, cursor: number) {
 
     })
 
+}
+
+
+export async function getAllPostId() {
+    const posts = await prisma.post.findMany({
+        select: {
+            id: true,
+        }
+    })
+    return posts
 }
 
 export async function getPost() {
