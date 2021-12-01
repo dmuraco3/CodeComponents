@@ -101,8 +101,8 @@ const Home: NextPage<InferGetServerSidePropsType<typeof getServerSideProps>> = (
   return (
     <div>
       {!session && (
-        <div className="flex font-inter px-16 py-10 bg-indigo-200 bg-opacity-50">
-          <div className="w-1/2 mt-10">
+        <div className="flex font-inter px-8 md:px-16 py-10 bg-indigo-200 bg-opacity-50">
+          <div className="w-full md-1/2 mt-10">
             <h1 className="text-5xl font-semibold">Find the solution to your technical problem</h1>
             <h5 className="text-lg mt-10">Share your code and find other&apos;s code</h5>
             <button
@@ -114,7 +114,7 @@ const Home: NextPage<InferGetServerSidePropsType<typeof getServerSideProps>> = (
               Sign Up
             </button>
           </div>
-          <div className="w-1/2 flex items-center justify-center">
+          <div className="hidden md:flex w-1/2  items-center justify-center">
             <Image src="/CodeSnip.png" width="490px" height="400" quality="100" />
             {/* 1.22616091954 */}
           </div>
@@ -159,7 +159,7 @@ const Home: NextPage<InferGetServerSidePropsType<typeof getServerSideProps>> = (
       {/* where posts are rendered after tag is selected */}
       {posts && (
         <>
-          <div className="static flex posts-layout pb-40 font-inter">
+          <div className="static flex posts-layout pb-40 font-inter mb-10 md:mx-16 mx-4 justify-center sm:justify-start">
 
             <div className={`${!!router.query.postId ? "block" : "hidden "} absolute  w-full h-screen bg-white z-50 top-0 left-0 bottom-0 right-0`}>
               
@@ -179,7 +179,7 @@ const Home: NextPage<InferGetServerSidePropsType<typeof getServerSideProps>> = (
               </div>
             </div>
             {posts.map((item, index) => (
-              <div key={index} className="flex-post post min-w-post w-1/4 px-4">
+              <div key={index} className="flex-post  post min-w-post w-1/4 px-4 ">
                 <Link href={`/?postId=${item.id}`} as={`/post/${item.id}`}>
                   <div className="w-full aspect-w-1 aspect-h-1 bg-gray-100 relative rounded-2xl overflow-hidden" onClick={() => {setCurrentPost(item)}}>
                     {/* <SyntaxHighlighter language="typescript" className="h-full" style={atomDark}>

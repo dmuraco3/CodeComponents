@@ -60,7 +60,7 @@ const MobileNav = ({
         <div
           className={`${
             mobileNavShown ? "-translate-x-0" : "-translate-x-full"
-          } z-10 transition-transform transform duration-500 ease-in-out fixed filter drop-shadow-cool left-0 top-0 w-screen h-screen bg-white overflow-hidden  `}
+          } transition-transform transform duration-500 ease-in-out fixed filter drop-shadow-cool left-0 top-0 w-screen h-screen bg-white overflow-hidden z-10`}
         >
           <div className="flex justify-center h-16 items-center filter bg-white drop-shadow-cool">
             <img src="/_logo.svg" className="w-60" width="100%" />
@@ -136,7 +136,10 @@ const MobileNav = ({
                     <span className="ml-5 text-xl font-semibold">
                       {session.user?.name}
                     </span>
-                    <button className="flex items-center text-xl font-semibold mx-4 transform hover:scale-125 transition duration-300 ease-in-out">
+                    <button className="flex items-center text-xl font-semibold mx-4 transform hover:scale-125 transition duration-300 ease-in-out" onClick={(e) => {
+                      e.preventDefault();
+                      signout();
+                    }}>
                       Sign Out
                     </button>
                   </div>
@@ -181,7 +184,7 @@ const NavBar = () => {
   }
 
   return (
-    <nav className="z-40 relative filter drop-shadow-cool h-14 block bg-white flex flex-row font-inter px-3">
+    <nav className="z-40 relative filter drop-shadow-cool h-14 bg-white flex flex-row font-inter px-3">
       {/* logo container */}
       <div className="flex-auto w-1/3 flex items-center">
         <img

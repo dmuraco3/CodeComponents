@@ -29,15 +29,23 @@ const Auth: FC = ({children}) => { // checks if user is logged in and redirects 
 function MyApp({ Component, pageProps }: AuthedPageProps) {
   return (
     <Provider session={pageProps.session}>
-      <NavBar />
-      {Component.needsAuth ? (
-        <Auth>
-          <Component {...pageProps} />
-        </Auth>
-      ) : (
-        <Component {...pageProps} />
-      )}
-      <Footer />
+      <div className="flex flex-col min-h-screen">
+        <NavBar />
+        {Component.needsAuth ? (
+          <Auth>
+            <div className="flex-1">
+              <Component {...pageProps} />
+            </div>
+          </Auth>
+        ) : (
+          <div className="flex-1">
+            <Component {...pageProps} />
+          </div>
+
+        )}
+        <Footer />
+
+      </div>
     </Provider>
   )
 }

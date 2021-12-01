@@ -163,7 +163,7 @@ const Post: React.FC<{Post: post}> = ({Post}) => {
                     <h1 className="w-full text-center text-lg my-4 font-semibold">{Post.title}</h1>
                 </div>
                 <div className="md:px-2/12 lg:px-3/12 xl:px-3/12">
-                    <div className="w-full relative  bg-gray-100 rounded-2xl flex items-center flex-col justify-center">
+                    <div className="w-full relative  bg-gray-100 md:rounded-2xl rounded-none flex items-center flex-col justify-center">
                         
                         <div className={`${ imageShow ? "absolute top-0 left-1/2 flex z-60 transform -translate-x-1/2" : "w-full flex justify-center items-center"} `}>
                             {/* controls for showing image */}
@@ -174,7 +174,7 @@ const Post: React.FC<{Post: post}> = ({Post}) => {
                                 setImageShow(true)
                             }}>IMAGE</div>
                         </div>
-                        <div className="relative aspect-w-1 aspect-h-1 w-full rounded-2xl overflow-hidden  ">
+                        <div className="relative aspect-w-1 aspect-h-1 w-full md:rounded-2xl rounded-none overflow-hidden  ">
                             {imageShow ? <Image src={Post.images[0]} layout="fill" objectFit="cover"/> : <div>
                                 <SyntaxHighlighter className="h-full" language="typescript" style={docco} >
                                     {Post.content}
@@ -183,7 +183,7 @@ const Post: React.FC<{Post: post}> = ({Post}) => {
 
                         </div>
                     </div>    
-                    <p className="mt-8 text-lg">
+                    <p className="mt-8 text-lg mx-2">
                         {Post.description}
                     </p>
                 </div>
@@ -205,7 +205,7 @@ const Post: React.FC<{Post: post}> = ({Post}) => {
                                 <b className="hover:cursor-pointer"> {Post.author.name}</b>    
                             </Link> 
                         </h1>
-                        <div className="flex posts-layout">
+                        <div className="flex posts-layout justify-center md:justify-start">
                             {postsByUser && postsByUser.map((item, index) => (
                                 <div key={index} className="flex-post post min-w-post w-1/4 px-4">
                                     <Link href={`/post/${item.id}`} >
@@ -234,8 +234,8 @@ const Post: React.FC<{Post: post}> = ({Post}) => {
 
                 )}
                 <div className="mt-10 my-5 w-full h-0.5 bg-black rounded-lg"/>
-                <h1 className="text-lg mb-4">Related posts</h1>
-                <div className="flex posts-layout font-inter">
+                <h1 className="text-lg mb-4 mx-2">Related posts</h1>
+                <div className="flex posts-layout font-inter justify-center md:justify-start">
                     {relatedPosts && relatedPosts.length > 0 && relatedPosts.map((item, index) => (
                         <div key={index} className="flex-post post min-w-post w-1/4 px-4">
                         <Link href={`/post/${item.id}`} >
