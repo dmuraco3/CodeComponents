@@ -13,7 +13,6 @@ export default function Footer() {
     const checkWindow = () => {
         const innerHeight = window.innerHeight;
         if(footerRef.current) {
-            console.log(footerRef.current.offsetHeight + innerHeight, window.innerHeight)
             if(window.innerHeight >= footerRef.current.offsetHeight + innerHeight) {
                 setToBottom(true)
             } else {

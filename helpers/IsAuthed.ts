@@ -4,7 +4,6 @@ import { getToken } from 'next-auth/jwt';
 
 export default async function IsAuthed(req: NextApiRequest, res: NextApiResponse) {
     const token = await getToken({ req, secret: process.env.NEXT_AUTH_SECRET });
-    console.log(token)
     if(token) {
       return true;
     } else {

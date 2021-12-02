@@ -145,7 +145,11 @@ const MobileNav = ({
                   </div>
                 </div>
                 <div className="grid xs:grid-cols-2 mx-4 mt-6">
-                  <div className="min-w-gridItem mt-4 text-lg">Profile</div>
+                  <div className="min-w-gridItem mt-4 text-lg">
+                    <Link href={`/user/${session.user.id}`}>
+                      Profile
+                    </Link>
+                  </div>
                   <div className="min-w-gridItem mt-4 text-lg">
                     Upvoted Posts
                   </div>
@@ -288,7 +292,9 @@ const NavBar = () => {
                 } absolute bg-white filter drop-shadow-cool transform -translate-x-3/4 translate-y-11 w-40 flex-wrap justify-center px-5 text-gray-800 py-5 rounded-md text-md font-inter`}
               >
                 <div className="w-full">
-                  <span>Profile</span>
+                  <Link href={`/user/${session.user.id}`}>
+                    Profile
+                  </Link>
                 </div>
 
                 <div className="h-px w-full bg-gray-400 my-2"/> {/*divider*/}
