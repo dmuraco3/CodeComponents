@@ -24,6 +24,7 @@ export async function getPostById(id: number) {
             }
         }
     })
+    return post;
 }
 
 

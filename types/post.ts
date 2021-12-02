@@ -1,3 +1,5 @@
+import { Tag } from "@prisma/client";
+
 export type tag = {
     id: number;
     name: string;
@@ -8,12 +10,11 @@ export type post = {
     title: string;
     content: string;
     description: string;
-    tags: tag[];
-    following: boolean;
+    tags: Tag[];
     author: {
-        name: string;
-        image: string;
-        id: string;
+        name: string | null;
+        image: string | null;
+        id: number;
     },
     images: string[];
 }

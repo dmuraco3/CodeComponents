@@ -14,25 +14,7 @@ import { useSession, signIn } from "next-auth/client";
 import Link from 'next/link'
 import { useRouter } from "next/router";
 import Post from "../components/post";
-type tag = {
-  id: number;
-  name: string;
-  imgSrc: string;
-};
-type post = {
-  id: number;
-  title: string;
-  content: string;
-  description: string;
-  tags: tag[];
-  following: boolean;
-  author: {
-    name: string;
-    image: string;
-    id: string;
-  },
-  images: string[];
-}
+import {post, tag} from '../types/post'
 
 export const getServerSideProps: GetServerSideProps<{
   tags: Prisma.PromiseReturnType<typeof GetTags>;
@@ -195,7 +177,7 @@ const Home: NextPage<InferGetServerSidePropsType<typeof getServerSideProps>> = (
                 <div className="mt-2">
                   {/* where user info is displayed */}
                   <div className="flex items-center">
-                    <Image src={item.author.image} className="rounded-full" width="30px" height="30px"/>
+                    <Image src={item.author.image as string} className="rounded-full" width="30px" height="30px"/>
                     <span className="ml-2">{item.author.name}</span>
                   </div>
                 </div>

@@ -26,7 +26,7 @@ const Post: React.FC<{Post: post}> = ({Post}) => {
             })
         }
         const followParams = new URLSearchParams({
-            userId: Post.author.id,
+            userId: Post.author.id.toString(),
         })
 
         fetch(`/api/user/follow?${followParams}`)
@@ -48,7 +48,7 @@ const Post: React.FC<{Post: post}> = ({Post}) => {
 
 
         const params = new URLSearchParams({
-            author: Post.author.name,
+            author: Post.author.name as string,
             notId: Post.id.toString(),
         })
         
@@ -74,7 +74,7 @@ const Post: React.FC<{Post: post}> = ({Post}) => {
                     <div className="flex-intrinsic flex w-3/12">
                         <Link href={`${process.env.NEXT_PUBLIC_URL}/user/${Post.author.name}`}>
                             <div style={{width: '70px', height: '70px'}} className="hover:cursor-pointer">
-                                <Image src={Post.author.image} className="rounded-full" width="80px" height="80px"/> 
+                                <Image src={Post.author.image as string} className="rounded-full" width="80px" height="80px"/> 
 
                             </div>
                         
@@ -135,7 +135,7 @@ const Post: React.FC<{Post: post}> = ({Post}) => {
                     <div className="w-full flex">
                         <Link href={`${process.env.NEXT_PUBLIC_URL}/user/${Post.author.name}`}>
                             <div style={{ width: '70px', height: '70px' }} className="hover:cursor-pointer">
-                                <Image src={Post.author.image} className="rounded-full" width="80px" height="80px" />
+                                <Image src={Post.author.image as string} className="rounded-full" width="80px" height="80px" />
 
                             </div>
 
@@ -191,7 +191,7 @@ const Post: React.FC<{Post: post}> = ({Post}) => {
                     <div className="w-5/12 h-0.5 rounded-lg w-full bg-black" />
                     {postsByUser && postsByUser.length > 0 && (
                         <div className="w-2/12 flex items-center justify-center">
-                            <Image src={Post.author.image} className="rounded-full" width="30px" height="30px"/>
+                            <Image src={Post.author.image as string} className="rounded-full" width="30px" height="30px"/>
                         </div>
 
                     )}
@@ -223,7 +223,7 @@ const Post: React.FC<{Post: post}> = ({Post}) => {
                                     <div className="mt-2">
                                     {/* where user info is displayed */}
                                     <div className="flex items-center">
-                                        <Image src={item.author.image} className="rounded-full" width="30px" height="30px"/>
+                                        <Image src={item.author.image as string} className="rounded-full" width="30px" height="30px"/>
                                         <span className="ml-2">{item.author.name}</span>
                                     </div>
                                     </div>
@@ -253,7 +253,7 @@ const Post: React.FC<{Post: post}> = ({Post}) => {
                         <div className="mt-2">
                         {/* where user info is displayed */}
                         <div className="flex items-center">
-                            <Image src={item.author.image} className="rounded-full" width="30px" height="30px"/>
+                            <Image src={item.author.image as string} className="rounded-full" width="30px" height="30px"/>
                             <span className="ml-2">{item.author.name}</span>
                         </div>
                         </div>
