@@ -17,7 +17,7 @@ export const getStaticPaths: GetStaticPaths = async () => {
     
       // We'll pre-render only these paths at build time.
       // { fallback: false } means other routes should 404.
-    return { paths, fallback: false }
+    return { paths, fallback: true }
 }
 
 export const getStaticProps: GetStaticProps<{
@@ -27,14 +27,21 @@ export const getStaticProps: GetStaticProps<{
     return {
         props: {
             post
-        }
+        },
+        revalidate: 1
     }
 }
 
 const PostById: NextPage<InferGetStaticPropsType<typeof getStaticProps>> = (props: InferGetStaticPropsType<typeof getStaticProps>) => {
+    const router = useRouter()
+
+
+    
     return (
         <div>
-            <Post  Post={props.post[0]}/>
+            {router.isFallback ? (
+                <div>Loading...</div>
+            ) : <Post  Post={props.post[0]}/>}
         </div>
     )
 }

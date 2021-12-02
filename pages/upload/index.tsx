@@ -109,7 +109,12 @@ const Upload: AuthedPage<InferGetServerSidePropsType<typeof getServerSideProps>>
       body: JSON.stringify(componentData)
     })
       .then((res) => res.json())
-      .then((json) => console.log(json));
+      .then((json) => {
+        if(json.message == "Post created") {
+          router.push("/");
+          
+        }
+      });
     // router.push("/");
   };
   const options = props.tags.map((tag) =>{ return {label: tag.name, value: tag.id}});
