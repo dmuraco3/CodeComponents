@@ -29,10 +29,10 @@ export const getStaticProps: GetStaticProps<{user: Prisma.PromiseReturnType<type
 
 }
 
-const UserNavLink: React.FC<{ref: string; active: string;}> = (props) => {
+const UserNavLink: React.FC<{link: string; active: string;}> = (props) => {
     return (
-        <h1 className={`text-lg font-semibold ${props.active == props.ref ? "text-indigo-600" : "text-black"}`}>
-            {props.ref}
+        <h1 className={`text-lg font-semibold ${props.active == props.link ? "text-indigo-600" : "text-black"}`}>
+            {props.link}
         </h1>
 
     )
@@ -104,8 +104,14 @@ const UserById: NextPage<InferGetStaticPropsType<typeof getStaticProps>> = (prop
                         </div>
 
                     </div>
-                    <div className="flex justify-between my-16">
-                        <UserNavLink ref="Components" active={active}/>
+                    <div className="flex justify-between mt-8 mx-8 flex-wrap">
+                        <UserNavLink link="Components" active={active}/>
+                        <UserNavLink link="Liked Posts" active={active}/>
+                        <UserNavLink link="About" active={active}/>
+                    </div>
+                    <div className="relative w-full">
+                        <div className="mt-8 w-full h-1 bg-gray-300"/>
+
                     </div>
                 </>
                 
