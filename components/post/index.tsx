@@ -165,7 +165,7 @@ const Post: React.FC<{Post: post}> = ({Post}) => {
                 <div className="md:px-2/12 lg:px-3/12 xl:px-3/12 mt-8">
                     <div className="w-full relative  bg-gray-100 md:rounded-2xl rounded-none flex items-center flex-col justify-center">
                         
-                        <div className={` absolute -top-11 left-1/2 flex z-60 transform -translate-x-1/2  rounded-tl-lg rounded-tr-lg bg-gray-300 w-max`}>
+                        <div className={` absolute -top-11 left-1/2 flex z-10 transform -translate-x-1/2  rounded-tl-lg rounded-tr-lg bg-gray-300 w-max`}>
                             {/* controls for showing image */}
                             <div className={` hover:cursor-pointer border-2 py-2 px-6 border-gray-500 rounded-tl-lg ${!imageShow ? "font-bold" : ""}`} onClick={() => {
                                 setImageShow(false)
@@ -187,15 +187,15 @@ const Post: React.FC<{Post: post}> = ({Post}) => {
                         {Post.description}
                     </p>
                 </div>
-                <div className="flex items-center mt-20">
-                    <div className="w-5/12 h-0.5 rounded-lg w-full bg-black" />
+                <div className={`items-center mt-20 ${postsByUser && postsByUser.length > 0 ? "flex" : "hidden"}`}>
+                    <div className="h-0.5 rounded-lg w-full bg-black" />
                     {postsByUser && postsByUser.length > 0 && (
                         <div className="w-2/12 flex items-center justify-center">
                             <Image src={Post.author.image as string} className="rounded-full" width="30px" height="30px"/>
                         </div>
 
                     )}
-                    <div className="w-5/12 h-0.5 w-full bg-black" />
+                    <div className="h-0.5 w-full bg-black" />
 
                 </div>
                 {postsByUser && postsByUser.length > 0 && (
