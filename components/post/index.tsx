@@ -133,7 +133,7 @@ const Post: React.FC<{Post: post}> = ({Post}) => {
                 </div>
                 <div className="flex md:hidden flex-wrap">
                     <div className="w-full flex">
-                        <Link href={`${process.env.NEXT_PUBLIC_URL}/user/${Post.author.name}`}>
+                        <Link href={`${process.env.NEXT_PUBLIC_URL}/user/${Post.author.id}`}>
                             <div style={{ width: '70px', height: '70px' }} className="hover:cursor-pointer">
                                 <Image src={Post.author.image as string} className="rounded-full" width="80px" height="80px" />
 
@@ -141,7 +141,7 @@ const Post: React.FC<{Post: post}> = ({Post}) => {
 
                         </Link>
                         <div className="ml-4">
-                            <Link href={`${process.env.NEXT_PUBLIC_URL}/user/${Post.author.name}`}>
+                            <Link href={`${process.env.NEXT_PUBLIC_URL}/user/${Post.author.id}`}>
                                 <span className="block text-xl font-medium hover:cursor-pointer">{Post.author.name}</span>
                             </Link>
                             <button onClick={(e) => {
@@ -201,7 +201,7 @@ const Post: React.FC<{Post: post}> = ({Post}) => {
                 {postsByUser && postsByUser.length > 0 && (
                     <div className="mx-2">
                         <h1 className="text-lg mb-4">More posts by
-                            <Link href={`/user/${Post.author.name}`}>
+                            <Link href={`/user/${Post.author.id}`}>
                                 <b className="hover:cursor-pointer"> {Post.author.name}</b>    
                             </Link> 
                         </h1>

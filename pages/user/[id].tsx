@@ -184,7 +184,7 @@ const UserById: NextPage<InferGetStaticPropsType<typeof getStaticProps>> = (prop
                         <div className="mt-2 w-full h-1 bg-gray-300"/>
                         <div className={`absolute w-1/3 h-1 bg-indigo-600 transition-all duration-100 ease-linear top-0 ${active == "Components" && "left-0"} ${active == "Liked Posts" && "left-1/3"} ${active == "About" && "left-2/3"}`}/>
                     </div>
-                    
+
                     {active == "Components" && (
                         <div>
                             {!userPosts ? <div>loading</div> : <PostLayout Posts={userPosts} emptyString="This User Has No Posts"/>}

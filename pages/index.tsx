@@ -177,8 +177,12 @@ const Home: NextPage<InferGetServerSidePropsType<typeof getServerSideProps>> = (
                 <div className="mt-2">
                   {/* where user info is displayed */}
                   <div className="flex items-center">
-                    <Image src={item.author.image as string} className="rounded-full" width="30px" height="30px"/>
-                    <span className="ml-2">{item.author.name}</span>
+                    <Image onClick={() => {
+                      router.push(`${process.env.NEXT_PUBLIC_URL}/user/${item.author.id}`)
+                    }}src={item.author.image as string} className="rounded-full hover:cursor-pointer" width="30px" height="30px"/>
+                    <span className="ml-2 hover:cursor-pointer" onClick={() => {
+                      router.push(`${process.env.NEXT_PUBLIC_URL}/user/${item.author.id}`)
+                    }}>{item.author.name}</span>
                   </div>
                 </div>
               </div>
