@@ -72,7 +72,7 @@ const Post: React.FC<{Post: post}> = ({Post}) => {
 
                 <div className="md:flex hidden mx-16">
                     <div className="flex-intrinsic flex w-3/12">
-                        <Link href={`${process.env.NEXT_PUBLIC_URL}/user/${Post.author.name}`}>
+                        <Link href={`${process.env.NEXT_PUBLIC_URL}/user/${Post.author.id}`}>
                             <div style={{width: '70px', height: '70px'}} className="hover:cursor-pointer">
                                 <Image src={Post.author.image as string} className="rounded-full" width="80px" height="80px"/> 
 
@@ -80,7 +80,7 @@ const Post: React.FC<{Post: post}> = ({Post}) => {
                         
                         </Link>
                         <div className="ml-4">
-                            <Link href={`${process.env.NEXT_PUBLIC_URL}/user/${Post.author.name}`}>
+                            <Link href={`${process.env.NEXT_PUBLIC_URL}/user/${Post.author.id}`}>
                                 <span className="block text-xl font-medium hover:cursor-pointer">{Post.author.name}</span>
                             </Link>
                             <button onClick={(e) => {

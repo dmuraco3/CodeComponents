@@ -106,11 +106,11 @@ model Comment {
   message    String 
   createdAt  DateTime   @default(now()) @map(name: "created_at")
   updatedAt  DateTime   @default(now()) @map(name: "updated_at")
-  user       User       @relation(fields: [userId], references: [id])
+  user       User       @relation(fields: [userId], references: [id], onDelete: Cascade)
   userId     Int
-  post       Post       @relation(fields: [postId], references: [id])
+  post       Post       @relation(fields: [postId], references: [id], onDelete: Cascade)
   postId     Int 
   parentId   Int?
-  parent     Comment?   @relation("commentParent", fields: [parentId], references: [id])
+  parent     Comment?   @relation("commentParent", fields: [parentId], references: [id], onDelete: Cascade)
   replies    Comment[]  @relation("commentParent")
 }

@@ -60,3 +60,67 @@ export async function getUserStats(id: number) : Promise<stats> {
         numberPosts: numberPosts._count._all
     };
 }
+
+
+export async function getLikedPosts(userId: number, pointer?: number) {
+    if(pointer) {
+        const likedPosts = await prisma.post.findMany({
+            take: 20,
+            skip:1,
+            cursor: {
+                id: pointer
+            },
+            where: {
+                likes: {
+                    some: {
+                        id: userId
+                    }
+                }
+            },
+            select: {
+                id: true,
+                title: true,
+                content: true,
+                description: true,
+                images: true,
+                tags: true,
+                author: {
+                    select: {
+                        name: true,
+                        image: true,
+                        id: true,
+                    }
+                }
+            }
+        })
+        return likedPosts
+    } else {
+        const likedPosts = await prisma.post.findMany({
+            take: 20,
+            where: {
+                likes: {
+                    some: {
+                        id: userId
+                    }
+                }
+            },
+            select: {
+                id: true,
+                title: true,
+                content: true,
+                description: true,
+                images: true,
+                tags: true,
+                author: {
+                    select: {
+                        name: true,
+                        image: true,
+                        id: true,
+                    }
+                }
+            }
+        })
+        return likedPosts
+
+    }
+}

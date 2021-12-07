@@ -53,9 +53,9 @@ const UserById: NextPage<InferGetStaticPropsType<typeof getStaticProps>> = (prop
 
     const [active, setActive] = useState<string>("Components")
 
-    const [userPosts, setUserPosts] = useState<post[]>([])
+    const [userPosts, setUserPosts] = useState<post[] | undefined>()
 
-    const [likedPosts, setLikedPosts] = useState<post[]>([])
+    const [likedPosts, setLikedPosts] = useState<post[] | undefined>()
     
     useEffect(() => {
         if(props?.user?.id) {
@@ -83,6 +83,18 @@ const UserById: NextPage<InferGetStaticPropsType<typeof getStaticProps>> = (prop
             .catch(err => {
                 console.error("error fetching user's posts")
             })
+        }
+
+        if(props?.user?.id) {
+            const postParams = new URLSearchParams({
+                userId: (props.user?.id as number).toString(),
+            })
+            fetch(`/api/user/liked?${postParams}`)
+            .then(res => res.json())
+            .then(res => {
+                setLikedPosts(res)
+            })
+            .catch(err => {console.error(err)})
         }
 
     }, [props])
@@ -172,9 +184,17 @@ const UserById: NextPage<InferGetStaticPropsType<typeof getStaticProps>> = (prop
                         <div className="mt-2 w-full h-1 bg-gray-300"/>
                         <div className={`absolute w-1/3 h-1 bg-indigo-600 transition-all duration-100 ease-linear top-0 ${active == "Components" && "left-0"} ${active == "Liked Posts" && "left-1/3"} ${active == "About" && "left-2/3"}`}/>
                     </div>
-
-                    {active == "Components" && <PostLayout Posts={userPosts} emptyString="This User Has No Posts"/>}
-                    {active == "Liked Posts" && <PostLayout Posts={likedPosts} emptyString="This User Has No Liked Posts"/>}
+                    
+                    {active == "Components" && (
+                        <div>
+                            {!userPosts ? <div>loading</div> : <PostLayout Posts={userPosts} emptyString="This User Has No Posts"/>}
+                        </div>
+                    )}
+                    {active == "Liked Posts" && (
+                        <div>
+                            {!likedPosts ? <div>loading...</div> : <PostLayout Posts={likedPosts} emptyString="This User Has No Liked Posts"/>}
+                        </div>
+                    )}
                 </>
                 
             )}

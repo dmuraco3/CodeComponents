@@ -115,8 +115,18 @@ const Upload: AuthedPage<InferGetServerSidePropsType<typeof getServerSideProps>>
           
         }
       });
-    // router.push("/");
   };
+  const UploadButton: React.FC<{className?: string}> = ({className}) => {
+    return <button
+      onClick={(e) => {
+        e.preventDefault();
+        publish();
+      }}
+      className={`relative z-10 flex-initial transition duration-500 ease-in-out transform hover:scale-125  flex items-center text-xl text-white bg-indigo-600 px-6 py-3 rounded-xl ${className}`}
+    >
+      Upload
+    </button>
+  }
   const options = props.tags.map((tag) =>{ return {label: tag.name, value: tag.id}});
   return (
     <div className="mt-5 flex justify-center flex-wrap">
@@ -124,7 +134,7 @@ const Upload: AuthedPage<InferGetServerSidePropsType<typeof getServerSideProps>>
         <title>Upload</title>
       </Head>
       <div className="flex w-full mx-6">
-        <div className="w-1/3">
+        <div className="w-0 hidden md:w-1/3 md:block">
           <button
             onClick={(e) => {
               e.preventDefault();
@@ -136,24 +146,16 @@ const Upload: AuthedPage<InferGetServerSidePropsType<typeof getServerSideProps>>
             Cancel{" "}
           </button>
         </div>
-        <h1 className="w-1/3 flex-initial text-center text-3xl font-bold">
+        <h1 className="w-full md:w-1/3 flex-initial text-center text-3xl font-bold">
           Upload
         </h1>
-        <div className="w-1/3 flex justify-end relative">
+        <div className="w-0 hidden md:w-1/3 md:flex justify-end relative">
           {/* todo: (Dylan Muraco) publish user data to server to api/posts/new */}
-          <button
-            onClick={(e) => {
-              e.preventDefault();
-              publish();
-            }}
-            className="relative z-10 flex-initial transition duration-500 ease-in-out transform hover:scale-125  flex items-center text-xl text-white bg-indigo-600 px-6 py-3 rounded-xl"
-          >
-            Upload
-          </button>
+          <UploadButton />
         </div>
       </div>
 
-      <main className="flex-initial w-3/5 mt-8">
+      <main className="flex-initial w-full px-2 md:px-2/12 mt-8 mb-20">
         <textarea
           onChange={(e) => {
             setComponentData({ ...componentData, title: e.target.value });
@@ -230,10 +232,10 @@ const Upload: AuthedPage<InferGetServerSidePropsType<typeof getServerSideProps>>
         </div>
         
 
-        <div className="mt-4">
+        <div className="mt-4 transform scale-100 relative">
           <Select onChange={(e) => {
             setComponentData({...componentData, tags: e})
-            }} value={tagsSelected} isMulti options={options} placeholder="Select Tags"/>
+            }} value={tagsSelected} isMulti options={options}  className="z-60 absolute" placeholder="Select Tags"/>
 
         </div>
       
@@ -245,6 +247,7 @@ const Upload: AuthedPage<InferGetServerSidePropsType<typeof getServerSideProps>>
           className="w-full focus:outline-none mt-8"
           placeholder="Describe what your component does..."
         />
+        <UploadButton className="w-full text-center justify-center z-10"/>
 
       </main>
     </div>
