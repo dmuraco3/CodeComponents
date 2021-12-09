@@ -91,6 +91,7 @@ const Home: NextPage<InferGetServerSidePropsType<typeof getServerSideProps>> = (
               className="mt-4 whitespace-nowrap transition duration-500 ease-in-out transform hover:scale-125  flex items-center text-xl text-white bg-indigo-600 px-6 py-3 rounded-xl"
               onClick={(e) => {
                 e.preventDefault();
+                signIn()
               }}
             >
               Sign Up
