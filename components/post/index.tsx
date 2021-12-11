@@ -2,7 +2,8 @@ import type {post} from '../../types/post'
 import { useState, useEffect } from 'react';
 import Image from 'next/image'
 import Link from 'next/link'
-import { FaHeart } from 'react-icons/fa';
+import {FaHeart, FaRegCopy } from 'react-icons/fa';
+import ToolTip from '../tooltip';
 import SyntaxHighlighter from 'react-syntax-highlighter';
 import { docco } from 'react-syntax-highlighter/dist/cjs/styles/hljs';
 const Post: React.FC<{Post: post}> = ({Post}) => {
@@ -174,8 +175,19 @@ const Post: React.FC<{Post: post}> = ({Post}) => {
                                 setImageShow(true)
                             }}>IMAGE</div>
                         </div>
-                        <div className="relative aspect-w-1 aspect-h-1 w-full md:rounded-2xl rounded-none overflow-hidden  ">
-                            {imageShow ? <Image src={Post.images[0]} layout="fill" objectFit="cover"/> : <div>
+                        <div className="relative aspect-w-1 aspect-h-1 h-full w-full md:rounded-2xl rounded-none overflow-hidden  ">
+                            {imageShow ? 
+                            <Image src={Post.images[0]} layout="fill" objectFit="cover"/> 
+                            : 
+                            <div>
+                                <span className="absolute top-5 right-5 z-40">
+                                    <ToolTip text="Copy">
+                                        <FaRegCopy onClick={() => {
+                                            navigator.clipboard.writeText(Post.content)
+                                        }} size={40} className="static top-5 right-5 transform-gpu hover:scale-125 hover:cursor-pointer transition-transform duration-300 ease-in-out bg-gray-200 p-2 rounded-lg filter drop-shadow-md"/>
+                                    </ToolTip>
+
+                                </span>
                                 <SyntaxHighlighter className="h-full" language="typescript" style={docco} >
                                     {Post.content}
                                 </SyntaxHighlighter>
