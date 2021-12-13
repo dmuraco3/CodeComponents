@@ -18,25 +18,64 @@ const Settings: AuthedPage = () => {
     }
 
     const EditProfile: React.FC = () => {
-        const [profileData, setProfileData] = useState({
+        const [formData, setFormData] = useState({
             username: session?.user.name,
-            bio: ""
+            bio: "",
+            formErrors: {
+                username: false,
+                bio: false
+            }
         })
         useEffect(() => {
             
         }, [])
+
+        const handleSubmit = () => {
+            return 
+        }
+
         return (
-            <div className="w-full h-full px-4 border border-black">
+            <div className="w-full h-full px-4">
                 <form className="flex flex-col">
+                    {/* username field and label */}
                     <label htmlFor="username" className="font-semibold">Username</label>
-                    <input name="username" className="bg-gray-200 rounded-lg active: outline-none px-2 py-1"/>
+                    <input value={formData.username} onChange={(e) => {setFormData({...formData, username: e.target.value as string})}} name="username" className={`bg-gray-200 rounded-lg active: outline-none px-2 py-1 ${formData.formErrors.username && "border-2 border-red-600"}`}/>
+                    
+                    <label htmlFor="bio" className="font-semibold mt-4">Bio</label>
+                    <textarea name="bio" value={formData.bio} onChange={(e) => {
+                        setFormData({...formData, bio: e.target.value})
+                    }}
+                    className="bg-gray-200 rounded-lg active: outline-none px-2 py-1"
+                    />
+
+
+                    {/* container for form buttons */}
+                    <div className="flex justify-center mt-10">
+                        <button 
+                        className="w-44 mx-2 flex-initial transition duration-500 ease-in-out transform hover:scale-110  flex justify-center items-center text-lg text-white bg-indigo-600 px-6 py-3 rounded-xl"
+                        type="submit">Save Changes</button>
+                        <button 
+                        className="w-44 text-center mx-2 relative flex-initial transition duration-500 ease-in-out transform hover:scale-110  flex items-center justify-center text-lg text-black bg-gray-300 px-6 py-3 rounded-xl"
+                        onClick={(e) => {
+                            e.preventDefault()
+                            setFormData({
+                                username: session?.user.name,
+                                bio: "",
+                                formErrors: {
+                                    username: false,
+                                    bio: false
+                                }
+                            })
+                        }}>Cancel</button>
+                    </div>
+
                 </form>
             </div>
         )
     }
     
     return (
-        <div className="md:px-3/12">
+        <div className="md:px-3/12 font-inter">
             {session && (
                 <div className="mt-12 flex h-12">
                     <Image src={session.user.image} className="rounded-full" height={50} width={50}/>
