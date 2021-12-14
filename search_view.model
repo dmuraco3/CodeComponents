@@ -1,0 +1,17 @@
+CREATE VIEW search_table AS
+SELECT
+    text 'users' AS origin_table, id AS id, to_tsvector('english', name) AS searchable_element
+FROM
+    users
+
+UNION ALL
+
+SELECT
+    text 'posts' as origin_table, id AS id, to_tsvector('english', title) AS searchable_element
+FROM
+    posts
+
+SELECT
+    text 'tags' as origin_table, is AS id, to_tsvector('english', name) AS searchable_element
+FROM 
+    tags;

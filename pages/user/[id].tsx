@@ -1,6 +1,6 @@
 import { Prisma } from '@prisma/client'
 import {GetStaticPaths, GetStaticProps, InferGetStaticPropsType, NextPage} from 'next'
-import {useRouter} from 'next/router'
+import { useRouter } from 'next/router'
 import { getAllUsers, getUserById, getUserStats, stats } from '../../helpers/user'
 import React, { useState, useEffect } from 'react'
 import Image from 'next/image'
