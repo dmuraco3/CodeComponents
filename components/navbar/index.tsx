@@ -8,6 +8,8 @@ import { FaBars, FaSearch, FaUserCircle, FaTimes, FaHeart } from "react-icons/fa
 
 import { signIn, signout, signOut, useSession } from "next-auth/client";
 import { Session } from "next-auth";
+import Search from "../search";
+import { sendStatusCode } from "next/dist/server/api-utils";
 
 interface LinkProps {
   children: React.ReactNode;
@@ -186,6 +188,8 @@ const NavBar = () => {
 
   const [mobileNavShown, setMobileNavShown] = useState(false);
 
+  const [searchQuery, setSearchQuery] = useState<string>("")
+
   interface AccountNavLinkProps {
     children?: React.ReactNode;
     onClick: () => void;
@@ -256,7 +260,11 @@ const NavBar = () => {
             className="ml-5 w-24 focus:outline-none"
             type="text"
             placeholder="Search"
+            onChange={(e) => {
+              setSearchQuery(e.target.value as string)
+            }}
           />
+          <Search query={searchQuery}/>
         </div>
         <div className="mx-4 flex flex-initial block justify-end whitespace-nowrap">
           {!session && (
