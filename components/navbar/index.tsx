@@ -145,7 +145,9 @@ const MobileNav = ({
                   </div>
                 </div>
                 <div className="grid xs:grid-cols-2 mx-4 mt-6">
-                  <div className="min-w-gridItem mt-4 text-lg">
+                  <div className="min-w-gridItem mt-4 text-lg" onClick={() => {
+                    setMobileNavShown(false)
+                  }}>
                     <Link href={`/user/${session.user.id}`}>
                       Profile
                     </Link>
@@ -153,13 +155,19 @@ const MobileNav = ({
                   <div className="min-w-gridItem mt-4 text-lg">
                     Upvoted Posts
                   </div>
+                  {/* TODO (Dylan Muraco):  this doesn't link anywhere*/}
 
                   <div className="min-w-gridItem mt-4 text-lg">
                     My Favorites
                   </div>
+                  {/* TODO (Dylan Muraco):  this doesn't link anywhere*/}
 
-                  <div className="min-w-gridItem mt-4 text-lg">
-                    Account Settings
+                  <div className="min-w-gridItem mt-4 text-lg" onClick={() => {
+                    setMobileNavShown(false)
+                  }}>
+                    <Link href="/user/settings">
+                      Account Settings
+                    </Link>
                   </div>
                 </div>
               </div>
@@ -309,7 +317,7 @@ const NavBar = () => {
                 <div className="h-px w-full bg-gray-400 my-2"/> {/*divider*/}
 
                 <div>
-                  <Link href="/settings">
+                  <Link href="/user/settings">
                     <AccountNavLink>
                       Account Settings
                     </AccountNavLink>
