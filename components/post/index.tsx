@@ -2,7 +2,8 @@ import type {post} from '../../types/post'
 import { useState, useEffect } from 'react';
 import Image from 'next/image'
 import Link from 'next/link'
-import {FaHeart, FaRegCopy } from 'react-icons/fa';
+import {FaComments, FaHeart, FaRegCopy } from 'react-icons/fa';
+import Comments from './comments'
 import ToolTip from '../tooltip';
 import SyntaxHighlighter from 'react-syntax-highlighter';
 import { docco } from 'react-syntax-highlighter/dist/cjs/styles/hljs';
@@ -12,20 +13,43 @@ const Post: React.FC<{Post: post}> = ({Post}) => {
     const [follows, setFollows] = useState<boolean|undefined>();
     const [likes, setLikes] = useState<boolean|undefined>()
 
+    const [showComments, setShowComments] = useState<boolean>(false)
+
     const [imageShow, setImageShow] = useState<boolean>(false);
 
     const [relatedPosts, setRelatedPosts] = useState<post[]|undefined>();
 
-    const [hight, setHeight] = useState<number>(0);
-    const [heightListener, setHeightListener] = useState<boolean>(false);
+
+    const ToolBar: React.FC = () => {
+        return (
+            <div className="flex w-full mx-4 mt-3.5">
+                <div className="p-2 filter drop-shadow-lg bg-gray-100 rounded-md active:drop-shadow-sm mx-2.5" onClick={() => {
+                    if(likes !== undefined) {
+                        fetch(`/api/user/like`, {
+                            method: 'POST',
+                            body: JSON.stringify({postId: Post.id})
+                        })
+                        .then(res => res.json())
+                        .then(json => {
+                            setLikes(json.likes)
+                        })
+
+                    }
+                }}>
+                    <FaHeart size={24} className={`${likes ? "text-red-600" : "text-black"} `}/>
+
+                </div>
+                <div className="static p-2 filter drop-shadow-lg bg-gray-100 rounded-md active:drop-shadow-sm mx-2.5" onClick={() => {
+                    setShowComments(true)
+                }}>
+                    <FaComments size={24} className="text-gray-900"/>
+                </div>
+            </div>
+        )
+    }
 
     useEffect(() => {
-        if(!heightListener){
-            setHeightListener(true)
-            window.addEventListener('resize', () => {
-                setHeight(document.body.scrollHeight);
-            })
-        }
+        
         const followParams = new URLSearchParams({
             userId: Post.author.id.toString(),
         })
@@ -70,8 +94,10 @@ const Post: React.FC<{Post: post}> = ({Post}) => {
     return (
         <div>
             {Post?.author && <div className="xl:mx-72 mt-6 font-inter">
+                <Comments shown={showComments} setShowComments={setShowComments}/>
 
                 <div className="md:flex hidden mx-16">
+
                     <div className="flex-intrinsic flex w-3/12">
                         <Link href={`${process.env.NEXT_PUBLIC_URL}/user/${Post.author.id}`}>
                             <div style={{width: '70px', height: '70px'}} className="hover:cursor-pointer">
@@ -98,6 +124,7 @@ const Post: React.FC<{Post: post}> = ({Post}) => {
                                 className=""
                             >{!follows ? "Follow" : "Unfollow" }</button>
                         </div>
+
                     </div>
                     <div className="w-6/12 flex items-center justify-center">
                         <h1 className="text-center text-2xl w-full">{Post.title}</h1>
@@ -132,7 +159,10 @@ const Post: React.FC<{Post: post}> = ({Post}) => {
                             </button>
                     </div>
                 </div>
+
+
                 <div className="flex md:hidden flex-wrap">
+                    {/* this is the mobile version of the post header */}
                     <div className="w-full flex">
                         <Link href={`${process.env.NEXT_PUBLIC_URL}/user/${Post.author.id}`}>
                             <div style={{ width: '70px', height: '70px' }} className="hover:cursor-pointer">
@@ -160,6 +190,9 @@ const Post: React.FC<{Post: post}> = ({Post}) => {
                             >{!follows ? "Follow" : "Unfollow"}</button>
                         </div>
 
+                    </div>
+                    <div className="">
+                        <ToolBar />
                     </div>
                     <h1 className="w-full text-center text-lg my-4 font-semibold">{Post.title}</h1>
                 </div>

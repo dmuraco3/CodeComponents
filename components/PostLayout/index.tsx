@@ -11,7 +11,7 @@ const PostLayout: React.FC<{Posts: post[]; emptyString?: string}> = ({Posts, emp
     <>
       {Posts.length == 0 && <div className="w-full flex items-center justify-center mt-20 text-2xl">{emptyString ? emptyString : "No Posts"}</div>}
       {Posts.length > 0 && (
-        <div className="flex posts-layout pb-40 font-inter mt-6">
+        <div className="flex posts-layout pb-40 font-inter mt-6 justify-center md:justify-start">
           {Posts.map((item, index) => (
             <div key={index} className="flex-post  post min-w-post w-1/4 px-4 py-4 ">
             <Link href={`/post/${item.id}`} >

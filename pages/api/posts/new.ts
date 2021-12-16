@@ -1,7 +1,5 @@
 import type { NextApiRequest, NextApiResponse } from "next";
-import IsAuthed from "../../../helpers/IsAuthed";
 import { getSession } from "next-auth/client";
-import { getToken } from "next-auth/jwt";
 import { createPost, Post } from "../../../helpers/posts";
 import FormData from 'form-data'
 // todo (Dylan Muraco) make sure all properties are satisfied

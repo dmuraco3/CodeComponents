@@ -49,13 +49,14 @@ interface MobileNav {
   mobileNavShown: boolean;
   setMobileNavShown: Dispatch<SetStateAction<boolean>>;
   session: Session | null;
+  searchShown: boolean;
+  setSearchShown: React.Dispatch<React.SetStateAction<boolean>>
+  query: string;
+  setSearchQuery: React.Dispatch<React.SetStateAction<string>>
+
 }
 
-const MobileNav = ({
-  mobileNavShown,
-  setMobileNavShown,
-  session
-}: MobileNav) => {
+const MobileNav: React.FC<MobileNav> = ({mobileNavShown, setMobileNavShown, session, searchShown, setSearchShown, query, setSearchQuery}) => {
   return (
     <>
       {/* <div className={` lg:hidden inline-block absolute top-0 left-0 w-screen h-screen overflow-x-hidden`}> */}
@@ -67,12 +68,25 @@ const MobileNav = ({
           <div className="flex justify-center h-16 items-center filter bg-white drop-shadow-cool">
             <img src="/_logo.svg" className="w-60" width="100%" />
           </div>
-          <div className="mx-2 my-2 px-4 py-2 flex items-center bg-white filter drop-shadow-cool rounded-xl">
+          <div style={{zIndex: 100}} className="relative mx-2 my-2 px-4 py-2 flex items-center bg-white filter drop-shadow-cool rounded-xl">
             <FaSearch size={18} className="text-gray-500" />
             <input
               className="ml-4 w-full focus:outline-none"
               placeholder="Search..."
+              onFocus={() => {
+                setSearchShown(true)
+              }}
+              onBlur={() => {
+                // we need this here because the search results component dissapears before any code can be run
+                setTimeout(() => {
+                  setSearchShown(false)
+                }, 75)
+              }}
+              onChange={(e) => {
+                setSearchQuery(e.target.value as string)
+              }}
             />
+            {query.length > 0 && <Search query={query} shown={searchShown} setShown={setSearchShown} setMobileNavShown={setMobileNavShown}/>}
           </div>
 
           <div className="flex flex-col flex-wrap mx-4">
@@ -189,6 +203,7 @@ const NavBar = () => {
   const [mobileNavShown, setMobileNavShown] = useState(false);
 
   const [searchQuery, setSearchQuery] = useState<string>("")
+  const [searchShown, setSearchShown] = useState<boolean>(true)
 
   interface AccountNavLinkProps {
     children?: React.ReactNode;
@@ -200,7 +215,7 @@ const NavBar = () => {
   }
 
   return (
-    <nav className="z-40 relative filter drop-shadow-cool h-14 bg-white flex flex-row font-inter px-3">
+    <nav className="z-100 relative filter drop-shadow-cool h-14 bg-white flex flex-row font-inter px-3">
       {/* logo container */}
       <div className="flex-auto w-1/3 flex items-center">
         <img
@@ -241,6 +256,10 @@ const NavBar = () => {
         mobileNavShown={mobileNavShown}
         setMobileNavShown={setMobileNavShown}
         session={session}
+        searchShown={searchShown}
+        setSearchShown={setSearchShown}
+        query={searchQuery}
+        setSearchQuery={setSearchQuery}
       />
 
       {/* links container */}
@@ -254,17 +273,27 @@ const NavBar = () => {
       </div>
       {/* user container */}
       <div className="hidden lg:flex  flex-auto w-1/3 items-center justify-end">
-        <div className="filter drop-shadow-cool flex items-center bg-white justify-end p-2 rounded-md">
+        <div className="relative filter drop-shadow-cool flex items-center bg-white justify-end p-2 rounded-md">
           <FaSearch size={18} className="text-gray-500" />
           <input
             className="ml-5 w-24 focus:outline-none"
             type="text"
             placeholder="Search"
+            onFocus={() => {
+              setSearchShown(true)
+            }}
+            onBlur={() => {
+              // we need this here because the search results component dissapears before any code can be run
+              setTimeout(() => {
+                setSearchShown(false)
+              }, 75)
+            }}
             onChange={(e) => {
               setSearchQuery(e.target.value as string)
             }}
           />
-          <Search query={searchQuery}/>
+          {searchQuery.length > 0 && <Search query={searchQuery} shown={searchShown} setShown={setSearchShown} setMobileNavShown={setMobileNavShown}/>}
+          
         </div>
         <div className="mx-4 flex flex-initial block justify-end whitespace-nowrap">
           {!session && (
