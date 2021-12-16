@@ -16,7 +16,7 @@ const Comments: React.FC<{shown: boolean, setShowComments: React.Dispatch<React.
 
     ]
     return (
-        <div className={`absolute z-50 top-14 left-0 block w-screen h-screen last:border-none bg-white transition-transform duration-300 ease-in-out transform ${shown ? "translate-x-0" : "-translate-x-full"}`}>
+        <div className={`absolute z-50 -top-8 left-0 block w-screen h-screen last:border-none bg-white transition-transform duration-300 ease-in-out transform ${shown ? "translate-x-0" : "-translate-x-full"}`}>
             <span className="absolute top-4 right-4" onClick={() => {
                 setShowComments(false)
             }}><FaPlus className="transform rotate-45" size={28}/></span>
