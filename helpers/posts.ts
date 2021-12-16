@@ -2,6 +2,7 @@ import {PrismaClient} from '@prisma/client'
 import { MultiValue } from 'react-select'
 import internal from 'stream'
 import {prisma} from '../.db'
+import { post } from '../types/post'
 
 export async function getPostById(id: number) {
     const post = await prisma.post.findMany({
@@ -88,4 +89,35 @@ export async function createPost({title, images, content, description, published
     })
     return post
 
+}
+
+export async function getPostsByTagName(name: string) {
+    const posts = await prisma.post.findMany({
+        where: {
+            tags: {
+                some: {
+                    name: {
+                        equals: name,
+                        mode: 'insensitive'
+                    }
+                }
+            }
+        },
+        select: {
+            id: true,
+            title: true,
+            content: true,
+            description: true,
+            tags: true,
+            author: {
+                select: {
+                    name: true,
+                    image: true,
+                    id: true
+                }
+            },
+            images: true,
+        }
+    })
+    return posts as post[];
 }

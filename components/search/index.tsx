@@ -62,7 +62,7 @@ const Search: React.FC<{query: string, shown: boolean, setShown: React.Dispatch<
                                     setTimeout(() => {
                                         setShown(false)
 
-                                    },50)
+                                    },100)
                                     setMobileNavShown(false)
                                 }}>
                                     <Image src={item.image} width={45} height={45} className="rounded-lg"/>

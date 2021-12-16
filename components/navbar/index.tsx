@@ -286,7 +286,7 @@ const NavBar = () => {
               // we need this here because the search results component dissapears before any code can be run
               setTimeout(() => {
                 setSearchShown(false)
-              }, 75)
+              }, 100)
             }}
             onChange={(e) => {
               setSearchQuery(e.target.value as string)
