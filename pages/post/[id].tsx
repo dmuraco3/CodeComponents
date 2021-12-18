@@ -38,7 +38,7 @@ const PostById: NextPage<InferGetStaticPropsType<typeof getStaticProps>> = (prop
 
     
     return (
-        <div>
+        <div className="overflow-hidden">
             {router.isFallback ? (
                 <div>Loading...</div>
             ) : <Post  Post={props.post[0]} type="straight"/>}

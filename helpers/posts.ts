@@ -214,3 +214,81 @@ export async function getPostsFromUser(username: string, take: number, notId?: n
 
     return posts;
 }
+
+export async function getComments(id: number, take: number, cursor?: number) {
+    const comments = await prisma.comment.findMany({
+        ...(take && {take: take}),
+        ...(cursor && {cursor: {
+            id: cursor
+        }}),
+        where: {
+            post: {
+                id
+            }
+        },
+        select: {
+            id: true,
+            message: true,
+            updatedAt: true,
+            user: {
+                select: {
+                    name: true,
+                    image: true,
+                }
+            }
+        },
+        orderBy: {
+            updatedAt: 'desc'
+        }
+    })
+    return comments
+}
+
+/**
+ * Returns the number of comments a post has 
+ * @param id - id of post
+ * @returns number of comments on post
+ * **/
+export async function getNumberComments(id: number) {
+    const numberComments = await prisma.comment.aggregate({
+        where: {
+            post: {
+                id: id
+            }
+        },
+        _count: {
+            _all: true
+        }
+    })
+    return numberComments;
+}
+
+export async function newComment(postId: number, userId: number, content: string) {
+    const newComment = await prisma.comment.create({
+        data: {
+            user: {
+                connect: {
+                    id: userId
+                }
+            },
+            post: {
+                connect: {
+                    id: postId
+                }
+            },
+            message: content
+        },
+        select: {
+            id: true,
+            message: true,
+            updatedAt: true,
+            user: {
+                select: {
+                    name: true,
+                    image: true,
+                }
+            }
+        }
+    })
+    return newComment
+}

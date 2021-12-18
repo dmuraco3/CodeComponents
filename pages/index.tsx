@@ -145,7 +145,7 @@ const Home: NextPage<InferGetStaticPropsType<typeof getStaticProps>> = (
                 router.push('/')
                 setCurrentPost(null)
               }}/>
-              <div  className="md:w-full w-full  rounded-tl-lg rounded-tr-lg absolute z-60 top-20 bg-white transform ">
+              <div  className="overflow-hidden md:w-full w-screen  rounded-tl-lg rounded-tr-lg absolute z-60 top-20 bg-white transform ">
                 <span className="font-bold text-4xl absolute top-2 right-5 hover:cursor-pointer" onClick={() => {
                   router.push("/")
                   setCurrentPost(null)
