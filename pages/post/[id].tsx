@@ -6,7 +6,7 @@ import Post from "../../components/post";
 import {post} from '../../types/post'
 
 
-import { getAllPostId, getPost, getPostById} from "../../helpers/posts";
+import { getAllPostId, getPostById} from "../../helpers/posts";
 
 export const getStaticPaths: GetStaticPaths = async () => {
     const AllId = await getAllPostId()
@@ -41,7 +41,7 @@ const PostById: NextPage<InferGetStaticPropsType<typeof getStaticProps>> = (prop
         <div>
             {router.isFallback ? (
                 <div>Loading...</div>
-            ) : <Post  Post={props.post[0]}/>}
+            ) : <Post  Post={props.post[0]} type="straight"/>}
         </div>
     )
 }

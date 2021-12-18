@@ -14,7 +14,6 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       const params = new URLSearchParams({
         key: process.env.IMAGE_BB_KEY as string
       })
-      console.log(process.env.IMAGE_BB_KEY)
       
       const formData = new FormData()
       formData.append("image", data.image.slice(22))
@@ -43,7 +42,6 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         tags: data.tags,
         images: [image]
       })
-      console.log(post)
       if(post) {
         res.status(200).json({
           message: "Post created",

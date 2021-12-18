@@ -3,7 +3,7 @@ import Image from "next/image";
 import React, { createRef, useRef } from "react";
 import { FaPlus } from "react-icons/fa";
 
-const Comments: React.FC<{shown: boolean, setShowComments: React.Dispatch<React.SetStateAction<boolean>>}> = ({shown, setShowComments}) => {
+const Comments: React.FC<{shown: boolean, setShowComments: React.Dispatch<React.SetStateAction<boolean>>, type: 'overlay' | 'straight'}> = ({shown, setShowComments, type}) => {
     const [session, loading] = useSession()
     const inputRef = createRef<HTMLTextAreaElement>()
     const comments = [
@@ -16,7 +16,7 @@ const Comments: React.FC<{shown: boolean, setShowComments: React.Dispatch<React.
 
     ]
     return (
-        <div className={`absolute z-50 -top-8 left-0 block w-screen h-screen last:border-none bg-white transition-transform duration-300 ease-in-out transform ${shown ? "translate-x-0" : "-translate-x-full"}`}>
+        <div className={`absolute z-50 ${type === 'overlay' ? "-top-12" : ""} left-0 block w-screen h-screen last:border-none bg-white transition-transform duration-300 ease-in-out transform ${shown ? "translate-x-0" : "-translate-x-full"}`}>
             <span className="absolute top-4 right-4" onClick={() => {
                 setShowComments(false)
             }}><FaPlus className="transform rotate-45" size={28}/></span>
@@ -29,7 +29,7 @@ const Comments: React.FC<{shown: boolean, setShowComments: React.Dispatch<React.
                     <textarea ref={inputRef} onChange={(e) => {
                         inputRef.current?.setAttribute('style', `height: auto;`) 
                         inputRef.current?.setAttribute('style', `height: ${inputRef.current.scrollHeight}px;`) 
-                    }}className="overflow-hidden focus:outline-none border-b border-gray-300 w-3/4 resize-none ml-4" placeholder="Make a public comment..."/>
+                    }}className="overflow-hidden focus:outline-none border-b border-gray-300 w-8/12 resize-none ml-4" placeholder="Make a public comment..."/>
                 </div>
             ) : (
                 <div></div>

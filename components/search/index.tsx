@@ -43,7 +43,7 @@ const Search: React.FC<{query: string, shown: boolean, setShown: React.Dispatch<
     }
 
     return (
-        <div style={{zIndex: 100}} className={`top-11 right-1/2 transform translate-x-1/2 absolute w-full md:w-72 bg-white h-60 ${shown ? "block" : "hidden"}`}>
+        <div style={{zIndex: 100}} className={`top-11 right-1/2 transform translate-x-1/2 absolute w-full lg:w-72 bg-white h-60 ${shown ? "block" : "hidden"}`}>
             <span onClick={() => {
                 setShown(false)
             }}

@@ -1,4 +1,4 @@
-import {PrismaClient} from '@prisma/client'
+import {Prisma, PrismaClient} from '@prisma/client'
 import { MultiValue } from 'react-select'
 import internal from 'stream'
 import {prisma} from '../.db'
@@ -51,10 +51,6 @@ export async function getAllPostId() {
     })
     return posts
 }
-
-export async function getPost() {
-
-}
 interface tag {
     label: string;
     value: string;
@@ -91,16 +87,60 @@ export async function createPost({title, images, content, description, published
 
 }
 
-export async function getPostsByTagName(name: string) {
-    const posts = await prisma.post.findMany({
-        where: {
-            tags: {
-                some: {
-                    name: {
-                        equals: name,
-                        mode: 'insensitive'
-                    }
+/**
+ * This helper function returns posts with a certain tag name
+ * @param name     - name of tag 
+ * @param tag      - number of posts to get from database
+ * @param notId    - optional param to exclude post with id... This function is used in /components/post/index.tsx to return related posts that arent the current select post
+ * @param pointer  - id of where to start taking posts from Ex: pointer=4, will get posts at and after id 4   
+**/
+export async function getPostsByTagName(name: string, take: number, notId?: number, pointer?: number) {
+    let options: {
+        tags: {
+            some: {
+                name: {
+                    equals: string,
+                    mode: 'insensitive',
                 }
+            }
+        }
+        NOT? : {
+            id: number
+        }
+    } = {
+        tags: {
+            some: {
+                name: {
+                    equals: name,
+                    mode: 'insensitive'
+                }
+            }
+        }
+    }
+
+    if(notId) {
+        options = {
+            ...options,
+            NOT: {id: notId}
+        }
+    }
+
+    let cursor: {id: number} | undefined;
+
+    if(pointer) {
+        cursor = {
+            id: pointer
+        }
+    }
+    
+    const posts = await prisma.post.findMany({
+        take: take,
+        cursor: cursor,
+        ...(pointer && {skip: 1}),
+        where: options,
+        orderBy: {
+            likes: {
+                _count: 'desc'
             }
         },
         select: {
@@ -120,4 +160,57 @@ export async function getPostsByTagName(name: string) {
         }
     })
     return posts as post[];
+}
+
+/** 
+ * This helper function returns posts from a user
+ *  @param username - username of user
+ *  @param pointer  - id of where to start taking posts from Ex: pointer=4, will get posts at and after id 4
+ *  @param take     - how many posts should be returned
+ *  @param notId    - id of post that should be skipped
+**/
+export async function getPostsFromUser(username: string, take: number, notId?: number, pointer?: number){
+    let options : {author: {name: string}, NOT?: {id: number}} = {author: {
+        name: username as string
+    }}
+
+    let cursor : {id?: number} | undefined = undefined;
+
+    if(notId) {
+        options = {
+            ...options,
+            NOT: {
+                id: notId
+            }
+        }
+    }
+
+    if(pointer) {
+        cursor = {
+            id: pointer
+        }
+    }
+    
+    const posts = await prisma.post.findMany({
+        take: take,
+        cursor: cursor,
+        where: options,
+        select: {
+            id: true,
+            title: true,
+            content: true,
+            description: true,
+            images: true,
+            author: {
+                select: {
+                    name: true,
+                    image: true,
+                    id: true,    
+
+                }
+            }
+        }
+    })
+
+    return posts;
 }

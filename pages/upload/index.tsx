@@ -247,7 +247,7 @@ const Upload: AuthedPage<InferGetServerSidePropsType<typeof getServerSideProps>>
           className="w-full focus:outline-none mt-8"
           placeholder="Describe what your component does..."
         />
-        <UploadButton className="w-full text-center justify-center z-10"/>
+        <UploadButton className="w-full text-center justify-center z-10 md:hidden"/>
 
       </main>
     </div>

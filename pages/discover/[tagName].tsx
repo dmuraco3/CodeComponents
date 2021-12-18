@@ -19,20 +19,7 @@ export const getStaticProps : GetStaticProps<{
     posts: Prisma.PromiseReturnType<typeof getPostsByTagName>
 }> = async (context) => {
     const tagName = context.params?.tagName
-    console.log(tagName)
-    const posts = await getPostsByTagName(tagName as string)
-    console.log(await prisma.post.findMany({
-        where: {
-            tags: {
-                some: {
-                    name: {
-                        equals: tagName?.toString().toLowerCase() as string,
-                        mode: 'insensitive'
-                    }
-                }
-            }
-        }
-    }))
+    const posts = await getPostsByTagName(tagName as string, 20)
     return {
         props: {
             posts

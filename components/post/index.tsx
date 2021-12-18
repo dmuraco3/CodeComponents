@@ -7,8 +7,7 @@ import Comments from './comments'
 import ToolTip from '../tooltip';
 import SyntaxHighlighter from 'react-syntax-highlighter';
 import { docco } from 'react-syntax-highlighter/dist/cjs/styles/hljs';
-const Post: React.FC<{Post: post}> = ({Post}) => {
-    const [post, setPost] = useState<post|undefined>();
+const Post: React.FC<{Post: post, type: 'overlay' | 'straight'}> = ({Post, type}) => {
     const [postsByUser, setPostsByUser] = useState<post[]|undefined>();
     const [follows, setFollows] = useState<boolean|undefined>();
     const [likes, setLikes] = useState<boolean|undefined>()
@@ -82,19 +81,18 @@ const Post: React.FC<{Post: post}> = ({Post}) => {
         .then(res => {
             setPostsByUser(res)
         })
-        let params2 = new URLSearchParams()
-        Post.tags.forEach((tag) => {
-            params2.append('tag', tag.name)
+        let params2 = new URLSearchParams({
+            tag: Post.tags[0].name,
+            notId: Post.id.toString()
         })
-        params2.append('notId', Post.id.toString())
         fetch(`/api/posts/?${params2}`)
         .then(res => res.json())
         .then(res => {setRelatedPosts(res)})
     }, [Post])
     return (
         <div>
-            {Post?.author && <div className="xl:mx-72 mt-6 font-inter">
-                <Comments shown={showComments} setShowComments={setShowComments}/>
+            {Post?.author && <div className="xl:mx-72 mt-6 font-inter relative">
+                <Comments shown={showComments} setShowComments={setShowComments} type={type}/>
 
                 <div className="md:flex hidden mx-16">
 

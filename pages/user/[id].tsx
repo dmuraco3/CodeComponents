@@ -7,6 +7,7 @@ import Image from 'next/image'
 import { FaAddressCard, FaHeart, FaThLarge } from 'react-icons/fa'
 import { post } from '../../types/post'
 import PostLayout from '../../components/PostLayout'
+import { signIn, useSession } from 'next-auth/client'
 
 export const getStaticPaths: GetStaticPaths = async () => {
     const allUser = await getAllUsers()
@@ -47,6 +48,7 @@ const UserNavLink: React.FC<{link: string; active: string; setActive: React.Disp
 
 const UserById: NextPage<InferGetStaticPropsType<typeof getStaticProps>> = (props: InferGetStaticPropsType<typeof getStaticProps>) => {
     const router = useRouter()
+    const [session, loading] = useSession()
     const {id} = router.query
 
     const [follows, setFollows] = useState<boolean | undefined>()
@@ -57,6 +59,48 @@ const UserById: NextPage<InferGetStaticPropsType<typeof getStaticProps>> = (prop
 
     const [likedPosts, setLikedPosts] = useState<post[] | undefined>()
     
+    const FollowButton = () => {
+        return <>
+            {!loading && (
+                <>
+                {session && session.user.id != props.user?.id && (
+                    <button onClick={(e) => {
+                        e.preventDefault()
+                        followAction()
+                    }}
+                    className={` rounded-lg px-3 py-1 ${!follows ? "bg-indigo-600 text-white" : "bg-gray-400"}`}
+                    >{!follows ? "Follow" : "Unfollow" }</button>
+                )}
+                {!session && <button onClick={(e) => {
+                        e.preventDefault()
+                        signIn()
+                }}
+                className={` rounded-lg px-3 py-1 bg-indigo-600 text-white`}
+                >Follow</button>}
+                
+                </>    
+            )}
+        
+        </>
+    }
+
+    const followAction = () => {
+        fetch(`/api/user/follow`, {
+            method: 'POST',
+            body: JSON.stringify({userId: Number(props.user?.id)}),
+        })
+        .then(res => res.json())
+        .then(res => {
+            setFollows(res.following)
+            if(res.following === true) {
+                props.stats.numberFollowers
+            }
+        })
+        .catch(err => {
+            console.error(err)
+        })
+    }
+
     useEffect(() => {
         if(props?.user?.id) {
             const followParams = new URLSearchParams({
@@ -67,6 +111,9 @@ const UserById: NextPage<InferGetStaticPropsType<typeof getStaticProps>> = (prop
             .then(res => res.json())
             .then(res => {
                 setFollows(res.following)
+            })
+            .catch(err => {
+                console.error(err)
             })
 
         }
@@ -113,18 +160,10 @@ const UserById: NextPage<InferGetStaticPropsType<typeof getStaticProps>> = (prop
                             </div>
                             <div className="ml-8">
                                 <h1 className="text-2xl">{props.user?.name}</h1>
-                                <button onClick={(e) => {
-                                    e.preventDefault()
-                                    fetch(`/api/user/follow`, {
-                                        method: 'POST',
-                                        body: JSON.stringify({userId: Number(props.user?.id)}),
-                                    })
-                                    .then(res => res.json())
-                                    .then(res => {
-                                        setFollows(res.following)
-                                    })
-                                }}
-                                >{!follows ? "Follow" : "Unfollow" }</button>
+                                <div className="mt-2">
+                                    <FollowButton />
+
+                                </div>
                             </div>
 
                         </div>
@@ -141,6 +180,7 @@ const UserById: NextPage<InferGetStaticPropsType<typeof getStaticProps>> = (prop
                         </div>
 
                     </div>
+                    {/* this top bar shows on mobile */}
                     <div className="md:hidden flex flex-wrap mt-6">
                         <div className="w-full">
                             <h1 className="text-xl font-bold">
@@ -164,6 +204,9 @@ const UserById: NextPage<InferGetStaticPropsType<typeof getStaticProps>> = (prop
                                     <b>{props.stats.numberFollowing}</b> <br/> following
                                 </h1>
                             </div>
+                        </div>
+                        <div className="mt-2">
+                            <FollowButton />
                         </div>
                     </div>
                     <div className="flex justify-between mt-8 flex-wrap">

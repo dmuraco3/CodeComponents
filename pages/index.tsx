@@ -1,8 +1,7 @@
 import type {
-  GetServerSideProps,
-  GetServerSidePropsResult,
   NextPage,
-  InferGetServerSidePropsType
+  GetStaticProps,
+  InferGetStaticPropsType
 } from "next";
 import { Prisma } from "@prisma/client";
 
@@ -16,26 +15,30 @@ import { useRouter } from "next/router";
 import Post from "../components/post";
 import {post, tag} from '../types/post'
 
-export const getServerSideProps: GetServerSideProps<{
+import { SpinnerCircular } from "spinners-react";
+
+
+export const getStaticProps: GetStaticProps<{
   tags: Prisma.PromiseReturnType<typeof GetTags>;
-}> = async (context) => {
+}> = async () => {
   const tags = await GetTags();
   return {
-    props: {  
+    props: {
       tags
-    }
-  };
-};
+    },
+    revalidate: 60
+  }
+}
 
-const Home: NextPage<InferGetServerSidePropsType<typeof getServerSideProps>> = (
-  props: InferGetServerSidePropsType<typeof getServerSideProps>
+const Home: NextPage<InferGetStaticPropsType<typeof getStaticProps>> = (
+  props: InferGetStaticPropsType<typeof getStaticProps>
 ) => {
   const [activeTag, setActiveTag] = useState<tag | null>(null);
-  const [session, loading] = useSession();
+  const [session, _loading] = useSession();
 
   const [currentPost, setCurrentPost] = useState<post | null>(null);
 
-  const [posts, setPosts] = useState<Array<post> | null>(null)
+  const [posts, setPosts] = useState<post[] | null>(null)
 
   const [height, setHeight] = useState(0);
   const [heightListener, setHeightListener] = useState<ResizeObserver>();
@@ -63,22 +66,15 @@ const Home: NextPage<InferGetServerSidePropsType<typeof getServerSideProps>> = (
 
   }, [refs])
 
-  const closeModal = () => {
-    router.push("/")
-    setCurrentPost(null)
-  }
-
   const getPostsWithTag = async (tag: tag) => {
     const params = new URLSearchParams({
-      id: tag.id.toString(),
-      name: tag.name
+      tag: tag.name,
     })
     fetch(`/api/posts?${params.toString()}`)
       .then(res => res.json())
       .then(data => setPosts(data))
   }
 
-  const random: number = Math.floor(Math.random() * props.tags.length)
 
   return (
     <div>
@@ -99,7 +95,6 @@ const Home: NextPage<InferGetServerSidePropsType<typeof getServerSideProps>> = (
           </div>
           <div className="hidden md:flex w-1/2  items-center justify-center">
             <Image src="/CodeSnip.png" width="490px" height="400" quality="100" />
-            {/* 1.22616091954 */}
           </div>
 
         </div>
@@ -156,7 +151,7 @@ const Home: NextPage<InferGetServerSidePropsType<typeof getServerSideProps>> = (
                   setCurrentPost(null)
 
                 }}>x</span>
-                {currentPost && <Post  Post={currentPost as post}/>}
+                {currentPost && <Post  Post={currentPost as post} type="overlay"/>}
                 
 
               </div>
@@ -188,9 +183,40 @@ const Home: NextPage<InferGetServerSidePropsType<typeof getServerSideProps>> = (
                 </div>
               </div>
             ))}
+            <div className="mt-10 w-full flex justify-center">
+              <button onClick={(e) => {
+                e.preventDefault()
+                if(posts.length != 0 && posts.length % 20 == 0) {
+                  if(posts.length >= 30) {
+                    router.push(`/discover/${activeTag}`)
+                  } else if(activeTag){
+                    const fetchParams = new URLSearchParams({
+                      tag: activeTag.name as string,
+                      pointer: posts.at(-1)?.id.toString() as string
+
+                    })
+                    fetch(`/api/posts?${fetchParams}`)
+                    .then(res => res.json())
+                    .then(data => {
+                      setPosts([...posts, ...data])
+                    })
+                    .catch(err => {
+                      console.error(err)
+                    })
+                  }
+                }
+              }}
+              className={` text-white px-2 py-2 rounded-lg shadow-3xl font-semibold filter drop-shadow-lg ${posts.length != 0 && posts.length % 20 == 0 ? "bg-indigo-600" : "bg-gray-300 text-gray-800 hover:cursor-not-allowed"}`}
+              >
+                Load More
+              </button>
+            </div>
           </div>
         </>
       )}
+      {posts == null && <div className="w-full flex justify-center items-center">
+        <SpinnerCircular />
+      </div>}
     </div>
   );
 };

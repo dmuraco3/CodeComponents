@@ -56,7 +56,7 @@ module.exports = {
       },
       dropShadow: {
         'cool': '0px 0px 4px rgba(0, 0, 0, 0.25)',
-        'active': '0px 0px 12px rgba(79, 70, 229, 0.6)'
+        'active': '0px 0px 12px rgba(79, 70, 229, 0.6)',
       },
     },
     fontFamily: {
@@ -64,7 +64,9 @@ module.exports = {
     },
     boxShadow: {
       'cool': '0px 0px 4px rgba(0, 0, 0, 0.25)',
-      'active': '0px 0px 12px rgba(79, 70, 229, 0.6)'
+      'active': '0px 0px 12px rgba(79, 70, 229, 0.6)',
+      'sm': '0 1px 2px 0 rgab(0 0 0, 0.25)',
+      'lg': '0 10px 15px -3px rgba(0 0 0, 0.25), 0 4px 6px -4px rgba(0 0 0, 0.)'
     },
     zIndex: {
       10: '10',
