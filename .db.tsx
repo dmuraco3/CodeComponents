@@ -11,4 +11,4 @@ export const prisma =
     })
 
 
-if (process.env.NODE_ENV !== 'production') global.prisma= prisma
+if (process.env.NODE_ENV !== 'production') global.prisma = prisma
