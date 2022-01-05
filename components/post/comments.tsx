@@ -1,7 +1,7 @@
 import { useSession } from "next-auth/client";
 import Image from "next/image";
 import React, { createRef, useEffect, useState } from "react";
-import { FaPaperPlane, FaPlus } from "react-icons/fa";
+import { FaPaperPlane, FaPencilAlt, FaPlus, FaTrash } from "react-icons/fa";
 import { SpinnerCircular } from "spinners-react";
 import { Post } from "../../helpers/posts";
 
@@ -12,6 +12,7 @@ const Comments: React.FC<{postId: number, shown: boolean, setShowComments: React
         message: string,
         updatedAt: string,
         user: {
+            id: number,
             name: string,
             image: string
         },
@@ -107,12 +108,37 @@ const Comments: React.FC<{postId: number, shown: boolean, setShowComments: React
             <div className="h-full w-full mt-8">
                 {comments && comments.map((item, index) => (
                     <div className={`${index != comments.length-1 && "border-b"} border-gray-2 px-4 py-4 my-2`}>
-                        <div className="flex items-center">
-                            <Image src={item.user.image} width={30} height={30} className="rounded-full"/>
-                            <span className="mx-3">
-                            •
-                            </span>
-                            <span>{((new Date().getTime() - (new Date(item.updatedAt).getTime()  + (1000 * 3600 * 2) + (1000 * 60 * 22))) / (1000 * 60)).toFixed()} minutes ago</span> 
+                        <div className="flex justify-between">
+                            <div className="flex items-center">
+                                <Image src={item.user.image} width={30} height={30} className="rounded-full"/>
+                                <span className="mx-3">
+                                •
+                                </span>
+                                <span>{((new Date().getTime() - (new Date(item.updatedAt).getTime())) / (1000 * 60)).toFixed()} minutes ago</span> 
+                            </div>
+                            {session?.user.id == item.user.id && <div className="flex items-center hover:cursor-pointer">
+                                <FaPencilAlt size={14} className="text-orange-400"/>    
+                                <span className="mx-3">
+                                •
+                                </span>
+                                <FaTrash size={14} className="text-red-500 hover:cursor-pointer" onClick={() => {
+                                    fetch(`/api/posts/comments/delete`, {
+                                        method: 'POST',
+                                        body: JSON.stringify({commentId: item.id})
+                                    })
+                                    .then(res => res.json())
+                                    .then(res => {
+                                        setComments([
+                                            ...comments.slice(0, index),
+                                            ...comments.slice(index, -1)
+                                        ])
+                                    })
+                                    .catch(err => {
+                                        console.error(err)
+                                    })
+                                }}/>
+                            </div>}
+
                         </div>
                         <div className="mt-3">
                             <p>{item.message}</p>

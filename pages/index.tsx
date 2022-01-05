@@ -17,7 +17,6 @@ import {post, tag} from '../types/post'
 
 import { SpinnerCircular } from "spinners-react";
 
-
 export const getStaticProps: GetStaticProps<{
   tags: Prisma.PromiseReturnType<typeof GetTags>;
 }> = async () => {
@@ -29,6 +28,7 @@ export const getStaticProps: GetStaticProps<{
     revalidate: 60
   }
 }
+
 
 const Home: NextPage<InferGetStaticPropsType<typeof getStaticProps>> = (
   props: InferGetStaticPropsType<typeof getStaticProps>
@@ -42,7 +42,6 @@ const Home: NextPage<InferGetStaticPropsType<typeof getStaticProps>> = (
 
   const [height, setHeight] = useState(0);
   const [heightListener, setHeightListener] = useState<ResizeObserver>();
-
 
   const router = useRouter()
 
@@ -157,7 +156,7 @@ const Home: NextPage<InferGetStaticPropsType<typeof getStaticProps>> = (
               </div>
             </div>
             {posts.map((item, index) => (
-              <div key={index} className="flex-post  post min-w-post w-1/4 px-4 ">
+              <div key={index} className="flex-post  post min-w-post w-1/4 px-4 mb-4">
                 <Link href={`/?postId=${item.id}`} as={`/post/${item.id}`}>
                   <div className="w-full aspect-w-1 aspect-h-1 bg-gray-100 relative rounded-2xl overflow-hidden" onClick={() => {setCurrentPost(item)}}>
                     {/* <SyntaxHighlighter language="typescript" className="h-full" style={atomDark}>

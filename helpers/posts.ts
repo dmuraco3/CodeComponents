@@ -234,6 +234,7 @@ export async function getComments(id: number, take: number, cursor?: number) {
             updatedAt: true,
             user: {
                 select: {
+                    id: true,
                     name: true,
                     image: true,
                 }
@@ -286,6 +287,7 @@ export async function newComment(postId: number, userId: number, content: string
             updatedAt: true,
             user: {
                 select: {
+                    id: true,
                     name: true,
                     image: true,
                 }
@@ -293,4 +295,16 @@ export async function newComment(postId: number, userId: number, content: string
         }
     })
     return newComment
+}
+
+export async function deleteComment(commentId: number, userId: number) {
+    const deletePost = await prisma.comment.deleteMany({
+        where: {
+            id: commentId,
+            user: {
+                id: userId
+            }
+        }
+    })
+    return deletePost;
 }
