@@ -85,9 +85,12 @@ model Post {
   published   Boolean   @default(false)
   authorId    Int
   images      String[]
+  views       Int       @default(0)
   author      User      @relation(fields: [authorId], references: [id])
   comments    Comment[]
   tags        Tag[]
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @default(now())
   likes       User[]    @relation("likes")
 }
 
