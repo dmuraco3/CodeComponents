@@ -7,6 +7,7 @@ import Comments from './comments'
 import ToolTip from '../tooltip';
 import SyntaxHighlighter from 'react-syntax-highlighter';
 import { docco } from 'react-syntax-highlighter/dist/cjs/styles/hljs';
+import Editor from '../editor';
 const Post: React.FC<{Post: post, type: 'overlay' | 'straight'}> = ({Post, type}) => {
     const [postsByUser, setPostsByUser] = useState<post[]|undefined>();
     const [follows, setFollows] = useState<boolean|undefined>();
@@ -193,8 +194,8 @@ const Post: React.FC<{Post: post, type: 'overlay' | 'straight'}> = ({Post, type}
                         </div>
                         <h1 className="w-full text-center text-lg my-4 font-semibold">{Post.title}</h1>
                     </div>
-                    <div className="md:px-2/12 lg:px-3/12 xl:px-3/12 mt-8">
-                        
+                    <div className="mt-8 mx-20">
+                        <Editor type='read' files={[{language: 'js', path: 'index.js', content: Post.content}, {language: 'jpg', path: 'cover.jpg', content: Post.images[0]}]}/>
                     </div>
                     <div className="mx-[6%]">
                         <p className="mt-8 text-lg mx-2">
