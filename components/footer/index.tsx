@@ -43,8 +43,6 @@ export default function Footer() {
                         <h1 className="text-xl font-semibold">Discover</h1>
                         <span className="block my-4">Most Helpful</span>
                         <span className="block my-4">Trending</span>
-                        <span className="block my-4">React</span>
-                        <span className="block my-4">Angular</span>
                     </div>
                     <div className="text-center">
                         <h1 className="text-xl font-semibold">Company</h1>

@@ -228,6 +228,7 @@ const Upload: AuthedPage<InferGetServerSidePropsType<typeof getServerSideProps>>
             value={componentData.content}
             onChange={handleEditorChange}
             onMount={handleEditorDidMount}
+            
           />
         </div>
         

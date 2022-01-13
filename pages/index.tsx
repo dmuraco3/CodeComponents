@@ -8,7 +8,6 @@ import { Prisma } from "@prisma/client";
 import React, { useEffect, useState, useRef} from "react";
 import Image from "next/image";
 
-import GetTags from "../helpers/tags/GetTags";
 import { useSession, signIn } from "next-auth/client";
 import Link from 'next/link'
 import { useRouter } from "next/router";
@@ -16,23 +15,27 @@ import Post from "../components/post";
 import {post, tag} from '../types/post'
 
 import { SpinnerCircular } from "spinners-react";
+import { getPopularPosts } from "../helpers/posts";
 
-export const getStaticProps: GetStaticProps<{
-  tags: Prisma.PromiseReturnType<typeof GetTags>;
-}> = async () => {
-  const tags = await GetTags();
+
+export const getStaticProps: GetStaticProps = async (context) => {
+  let popularPosts = await getPopularPosts()
+
+  
   return {
     props: {
-      tags
-    },
-    revalidate: 60
+      posts: popularPosts.map((post) => {
+        return {
+          ...post,
+          createdAt: post.createdAt.toDateString(),
+          updatedAt: post.updatedAt.toDateString()
+        }
+      })
+    }
   }
 }
 
-
-const Home: NextPage<InferGetStaticPropsType<typeof getStaticProps>> = (
-  props: InferGetStaticPropsType<typeof getStaticProps>
-) => {
+const Home: NextPage = ({posts: propsPosts}: InferGetStaticPropsType<typeof getStaticProps>) => {
   const [activeTag, setActiveTag] = useState<tag | null>(null);
   const [session, _loading] = useSession();
 
@@ -45,10 +48,6 @@ const Home: NextPage<InferGetStaticPropsType<typeof getStaticProps>> = (
 
   const router = useRouter()
 
-  const refs: { 
-    [key: string]: any 
-  }  = useRef(props.tags.map(() => React.createRef()));
-
   useEffect(() => {
       if(!heightListener){
         const resizeObserver = new ResizeObserver(() => {
@@ -57,22 +56,12 @@ const Home: NextPage<InferGetStaticPropsType<typeof getStaticProps>> = (
         resizeObserver.observe(document.body)
         setHeightListener(resizeObserver)
       }
+
+      setPosts(propsPosts)
+
     
-      const random: number =  Math.floor(Math.random() * (props.tags.length - 1)) 
-      const item = props.tags[parseInt(refs.current[random].current.id)] as tag
-      setActiveTag(item as tag)
-      getPostsWithTag(item as tag)
 
-  }, [refs])
-
-  const getPostsWithTag = async (tag: tag) => {
-    const params = new URLSearchParams({
-      tag: tag.name,
-    })
-    fetch(`/api/posts?${params.toString()}`)
-      .then(res => res.json())
-      .then(data => setPosts(data))
-  }
+  }, [propsPosts])
 
 
   return (
@@ -98,41 +87,6 @@ const Home: NextPage<InferGetStaticPropsType<typeof getStaticProps>> = (
 
         </div>
       )}
-      {props.tags && (
-        <div className="relative overflow-x-auto overflow-y-hidden flex py-2 my-10 mx-4 font-inter justify-center">
-          {props.tags?.map((item, index) => (
-            // <Link href="/upload" key={index}>
-              <div 
-                className={`${activeTag?.id === item.id ? "shadow-active " : "shadow-cool"} hover:shadow-active hover:cursor-pointer  transition-all duration-300 ease-in-out mx-4 rounded-lg w-52 float-left w-48 px-4 py-3 flex justify-left items-center shadow filter bg-white`}
-                id={index.toString()}
-                key={index}
-                ref={refs.current[index]}
-                onClick={(e) => {
-                  e.preventDefault();
-                  if (activeTag?.id === item.id) {
-                    setActiveTag(null);
-                  } else {
-                    setActiveTag(item as tag);
-                    getPostsWithTag(item as tag);
-                    
-                  }
-                }}
-              >
-                <div className="flex items-center justify-center">
-                  <Image
-                    src={item.imgSrc as string}
-                    alt={item.name} 
-                    width={46}
-                    height={46}
-                    layout="fixed"
-                  />
-                </div>
-                <span className="ml-4 flex-initial text-2xl">{item.name}</span>
-              </div>
-            // </Link>
-          ))}
-        </div>
-      )}
       {/* where posts are rendered after tag is selected */}
       {posts && (
         <>
@@ -156,7 +110,7 @@ const Home: NextPage<InferGetStaticPropsType<typeof getStaticProps>> = (
               </div>
             </div>
             {posts.map((item, index) => (
-              <div key={index} className="flex-post  post min-w-post w-1/4 px-4 mb-4">
+              <div key={index} className="flex-post  post min-w-post w-1/4 px-4 my-4">
                 <Link href={`/?postId=${item.id}`} as={`/post/${item.id}`}>
                   <div className="w-full aspect-w-1 aspect-h-1 bg-gray-100 relative rounded-2xl overflow-hidden" onClick={() => {setCurrentPost(item)}}>
                     {/* <SyntaxHighlighter language="typescript" className="h-full" style={atomDark}>

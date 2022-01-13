@@ -308,3 +308,44 @@ export async function deleteComment(commentId: number, userId: number) {
     })
     return deletePost;
 }
+
+export async function getPopularPosts(pages: number = 1, pageSize: number = 20, cursor?: number) {
+    const currentDate = new Date()
+    const oneWeekAgo = new Date(currentDate.getDate() - 7)
+    const posts = await prisma.post.findMany({
+        take: pageSize * pages,
+        ...(cursor && {
+            cursor: {
+                id: cursor
+            }
+        }),
+        where: {
+            createdAt: {
+                gte: oneWeekAgo,
+                lt: currentDate
+            }
+        },
+        orderBy: {
+            views: "asc"
+        },
+        select: {
+            id: true,
+            title: true,
+            content: true,
+            description: true,
+            images: true,
+            createdAt: true,
+            updatedAt: true,
+            author: {
+                select: {
+                    name: true,
+                    image: true,
+                    id: true,    
+
+                }
+            }
+        }
+
+    })
+    return posts;
+}
