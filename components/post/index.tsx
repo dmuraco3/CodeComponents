@@ -195,7 +195,7 @@ const Post: React.FC<{Post: post, type: 'overlay' | 'straight'}> = ({Post, type}
                         <h1 className="w-full text-center text-lg my-4 font-semibold">{Post.title}</h1>
                     </div>
                     <div className="mt-8 mx-20">
-                        <Editor type='read' files={[{language: 'js', path: 'index.js', content: Post.content}, {language: 'jpg', path: 'cover.jpg', content: Post.images[0]}]}/>
+                        <Editor type='read' files={[{language: 'javascript', path: 'index.js', content: Post.content, active: true}, {language: 'jpg', path: 'cover.jpg', content: Post.images[0], active: false}]}/>
                     </div>
                     <div className="mx-[6%]">
                         <p className="mt-8 text-lg mx-2">
